@@ -3141,12 +3141,16 @@
                                        tipoPozo.tipo === 'borde' ? 0xdc2626 :
                                        tipoPozo.tipo === 'amortiguadores' ? 0xd97706 : 0xff1744;
 
+                    // OPTIMIZACIÓN: Usar 6 segmentos en lugar de 12 para cilindros (reduce polígonos 50%)
+                    const CYLINDER_SEGMENTS = 6;
+                    const SPHERE_SEGMENTS = 6;
+
                     if (params.dobleTaco && tipoPozo.tipo !== 'precorte') {
                         // === MODELO DOBLE TACO 3D CON 3 APDs ===
                         
                         // Taco Superior (color según tipo)
                         const tacoSup = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.9, visualD * 0.9, T, 12),
+                            new THREE.CylinderGeometry(visualD * 0.9, visualD * 0.9, T, CYLINDER_SEGMENTS),
                             new THREE.MeshPhongMaterial({ color: tacoColor })
                         );
                         tacoSup.position.y = -T / 2;
@@ -3154,7 +3158,7 @@
 
                         // Carga Superior (color según tipo)
                         const cargaSup = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.8, visualD * 0.8, dobleTacoCalc.Lc1, 12),
+                            new THREE.CylinderGeometry(visualD * 0.8, visualD * 0.8, dobleTacoCalc.Lc1, CYLINDER_SEGMENTS),
                             new THREE.MeshPhongMaterial({ color: cargaColor, emissive: 0x330000 })
                         );
                         cargaSup.position.y = -T - dobleTacoCalc.Lc1 / 2;
@@ -3163,7 +3167,7 @@
                         // APD Superior (centro de carga superior)
                         apdY1 = dobleTacoCalc.apdY1;
                         apd1 = new THREE.Mesh(
-                            new THREE.SphereGeometry(0.35, 12, 12),
+                            new THREE.SphereGeometry(0.35, SPHERE_SEGMENTS, SPHERE_SEGMENTS),
                             new THREE.MeshPhongMaterial({ color: 0xffea00, emissive: 0xffc400, emissiveIntensity: 0.8 })
                         );
                         apd1.position.y = apdY1;
@@ -3171,7 +3175,7 @@
 
                         // Taco Intermedio (púrpura - gravilla)
                         const tacoInt = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.9, visualD * 0.9, params.Ti, 12),
+                            new THREE.CylinderGeometry(visualD * 0.9, visualD * 0.9, params.Ti, CYLINDER_SEGMENTS),
                             new THREE.MeshPhongMaterial({ color: 0x7c3aed })
                         );
                         tacoInt.position.y = -T - dobleTacoCalc.Lc1 - params.Ti / 2;
@@ -3180,7 +3184,7 @@
                         // APD Intermedio (centro del taco intermedio)
                         apdY2 = dobleTacoCalc.apdY2;
                         apd2 = new THREE.Mesh(
-                            new THREE.SphereGeometry(0.35, 12, 12),
+                            new THREE.SphereGeometry(0.35, SPHERE_SEGMENTS, SPHERE_SEGMENTS),
                             new THREE.MeshPhongMaterial({ color: 0xffea00, emissive: 0xff6600, emissiveIntensity: 0.6 })
                         );
                         apd2.position.y = apdY2;
@@ -3188,7 +3192,7 @@
 
                         // Carga Inferior (color según tipo)
                         const cargaInf = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.8, visualD * 0.8, dobleTacoCalc.Lc2, 12),
+                            new THREE.CylinderGeometry(visualD * 0.8, visualD * 0.8, dobleTacoCalc.Lc2, CYLINDER_SEGMENTS),
                             new THREE.MeshPhongMaterial({ color: cargaColor, emissive: 0x330000 })
                         );
                         cargaInf.position.y = -T - dobleTacoCalc.Lc1 - params.Ti - dobleTacoCalc.Lc2 / 2;
@@ -3197,7 +3201,7 @@
                         // APD Fondo (fondo de carga inferior)
                         apdY3 = dobleTacoCalc.apdY3;
                         apd3 = new THREE.Mesh(
-                            new THREE.SphereGeometry(0.35, 12, 12),
+                            new THREE.SphereGeometry(0.35, SPHERE_SEGMENTS, SPHERE_SEGMENTS),
                             new THREE.MeshPhongMaterial({ color: 0xffea00, emissive: 0xffc400, emissiveIntensity: 0.8 })
                         );
                         apd3.position.y = apdY3;
@@ -3205,7 +3209,7 @@
 
                         // Pasadura (gris)
                         const pasadura = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.6, visualD * 0.6, J, 12),
+                            new THREE.CylinderGeometry(visualD * 0.6, visualD * 0.6, J, CYLINDER_SEGMENTS),
                             new THREE.MeshPhongMaterial({ color: 0x6b7280, transparent: true, opacity: 0.6 })
                         );
                         pasadura.position.y = -T - dobleTacoCalc.Lc1 - params.Ti - dobleTacoCalc.Lc2 - J / 2;
@@ -3220,7 +3224,7 @@
 
                         // Taco precorte (más delgado)
                         const taco = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD_precorte * 0.9, visualD_precorte * 0.9, T, 12),
+                            new THREE.CylinderGeometry(visualD_precorte * 0.9, visualD_precorte * 0.9, T, CYLINDER_SEGMENTS),
                             new THREE.MeshPhongMaterial({ color: 0x8AD4EB })
                         );
                         taco.position.y = -T / 2;
@@ -3228,7 +3232,7 @@
 
                         // Carga precorte (desacoplada - más delgada que el pozo)
                         const carga = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD_precorte * 0.4, visualD_precorte * 0.4, Lc, 12),
+                            new THREE.CylinderGeometry(visualD_precorte * 0.4, visualD_precorte * 0.4, Lc, CYLINDER_SEGMENTS),
                             new THREE.MeshPhongMaterial({ color: 0x0891b2, emissive: 0x042f2e })
                         );
                         carga.position.y = -T - Lc / 2;
@@ -3236,7 +3240,7 @@
 
                         // Cordón detonante (línea central)
                         const cordon = new THREE.Mesh(
-                            new THREE.CylinderGeometry(0.05, 0.05, Lc, 6),
+                            new THREE.CylinderGeometry(0.05, 0.05, Lc, 4),
                             new THREE.MeshPhongMaterial({ color: 0xffea00, emissive: 0xffc400 })
                         );
                         cordon.position.y = -T - Lc / 2;
@@ -3244,7 +3248,7 @@
 
                         // APD precorte
                         apd1 = new THREE.Mesh(
-                            new THREE.SphereGeometry(0.25, 12, 12),
+                            new THREE.SphereGeometry(0.25, SPHERE_SEGMENTS, SPHERE_SEGMENTS),
                             new THREE.MeshPhongMaterial({ color: 0xffea00, emissive: 0xffc400, emissiveIntensity: 0.8 })
                         );
                         apd1.position.y = apdY1;
@@ -3259,7 +3263,7 @@
 
                         // Taco (color según tipo)
                         const taco = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.9, visualD * 0.9, T, 12),
+                            new THREE.CylinderGeometry(visualD * 0.9, visualD * 0.9, T, CYLINDER_SEGMENTS),
                             new THREE.MeshPhongMaterial({ color: tacoColor })
                         );
                         taco.position.y = -T / 2;
@@ -3267,7 +3271,7 @@
 
                         // Carga (color según tipo)
                         const carga = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.8, visualD * 0.8, Lc, 12),
+                            new THREE.CylinderGeometry(visualD * 0.8, visualD * 0.8, Lc, CYLINDER_SEGMENTS),
                             new THREE.MeshPhongMaterial({ color: cargaColor, emissive: 0x330000 })
                         );
                         carga.position.y = -T - Lc / 2;
@@ -3275,7 +3279,7 @@
 
                         // APD
                         apd1 = new THREE.Mesh(
-                            new THREE.SphereGeometry(0.4, 12, 12),
+                            new THREE.SphereGeometry(0.4, SPHERE_SEGMENTS, SPHERE_SEGMENTS),
                             new THREE.MeshPhongMaterial({ color: 0xffea00, emissive: 0xffc400, emissiveIntensity: 0.8 })
                         );
                         apd1.position.y = apdY1;
@@ -3283,7 +3287,7 @@
 
                         // Pasadura (gris)
                         const pasadura = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.6, visualD * 0.6, J, 12),
+                            new THREE.CylinderGeometry(visualD * 0.6, visualD * 0.6, J, CYLINDER_SEGMENTS),
                             new THREE.MeshPhongMaterial({ color: 0x6b7280, transparent: true, opacity: 0.6 })
                         );
                         pasadura.position.y = -T - Lc - J / 2;
@@ -3307,27 +3311,33 @@
             if (pozo.rocksGenerated) return;
             pozo.rocksGenerated = true;
 
-            const Xc = theoreticalValues.Xc; // Ya en pulgadas
+            const Xc = theoreticalValues.Xc;
             const n = params.dobleTaco ? dobleTacoCalc.n_eff : params.n;
             const P50 = theoreticalValues.X50;
             const P80 = theoreticalValues.P80;
 
-            if (params.dobleTaco && pozo.apdY2 && pozo.apdY3) {
-                // ============================================================
-                // FRAGMENTOS MODELO DOBLE TACO
-                // Los fragmentos se distribuyen hacia la superficie (cara libre)
-                // ============================================================
+            // OPTIMIZACIÓN: Reducir número de rocas para mejor rendimiento
+            // Solo generar rocas si hay pocos pozos (evitar saturar la escena)
+            const totalPozos = pozos3D.length;
+            const rocksMultiplier = totalPozos > 50 ? 0.3 : (totalPozos > 20 ? 0.5 : 1.0);
 
-                // === CONO 1 (APD1 hacia superficie) ===
-                // Finos cerca del APD1 y hacia arriba
-                for (let i = 0; i < 8; i++) {
+            if (params.dobleTaco && pozo.apdY2 && pozo.apdY3) {
+                // MODELO DOBLE TACO - Rocas reducidas para rendimiento
+                const numFinos1 = Math.ceil(4 * rocksMultiplier);
+                const numMedios1 = Math.ceil(3 * rocksMultiplier);
+                const numFinos2 = Math.ceil(4 * rocksMultiplier);
+                const numMedios2 = Math.ceil(3 * rocksMultiplier);
+                const numInteraccion = Math.ceil(3 * rocksMultiplier);
+                const numGruesos = Math.ceil(2 * rocksMultiplier);
+
+                // Cono 1 - Finos
+                for (let i = 0; i < numFinos1; i++) {
                     const u = Math.random() * 0.4;
                     let size = Xc * Math.pow(-Math.log(1 - u * 0.4), 1 / (n * 1.5));
                     size = Math.max(0.15, Math.min(size, P50 * 0.7));
                     const rock = createRockMesh(size, 0x22c55e);
                     const angle = Math.random() * Math.PI * 2;
                     const dist = Math.random() * zones.rc * 0.9;
-                    // Distribuir hacia arriba (superficie) desde APD1
                     const yPos = pozo.apdY1 + Math.random() * Math.abs(pozo.apdY1) * 0.6;
                     rock.position.set(pozo.x + Math.cos(angle) * dist, yPos, pozo.z + Math.sin(angle) * dist);
                     scene.add(rock);
@@ -3335,8 +3345,8 @@
                     rockStats.finos++;
                 }
 
-                // Medios en zona rf del cono 1 (hacia superficie)
-                for (let i = 0; i < 6; i++) {
+                // Cono 1 - Medios
+                for (let i = 0; i < numMedios1; i++) {
                     const u = 0.3 + Math.random() * 0.45;
                     let size = Xc * Math.pow(-Math.log(1 - u), 1 / n);
                     size = Math.max(P50 * 0.5, Math.min(size, P80));
@@ -3350,16 +3360,14 @@
                     rockStats.medios++;
                 }
 
-                // === CONO 2 (APD2 hacia superficie + componente abajo) ===
-                // Finos del APD2 principalmente hacia arriba
-                for (let i = 0; i < 8; i++) {
+                // Cono 2 - Finos
+                for (let i = 0; i < numFinos2; i++) {
                     const u = Math.random() * 0.4;
                     let size = Xc * Math.pow(-Math.log(1 - u * 0.4), 1 / (n * 1.5));
                     size = Math.max(0.15, Math.min(size, P50 * 0.7));
                     const rock = createRockMesh(size, 0x22c55e);
                     const angle = Math.random() * Math.PI * 2;
                     const dist = Math.random() * zones.rc * 0.85;
-                    // 80% hacia arriba, 20% hacia abajo (componente menor)
                     const yDir = Math.random() < 0.8 ? 1 : -1;
                     const yOffset = yDir > 0 ? Math.random() * (Math.abs(pozo.apdY2) - params.T) * 0.5 : Math.random() * dobleTacoCalc.Lc2 * 0.4;
                     const yPos = pozo.apdY2 + yDir * yOffset;
@@ -3369,8 +3377,8 @@
                     rockStats.finos++;
                 }
 
-                // Medios del cono 2
-                for (let i = 0; i < 6; i++) {
+                // Cono 2 - Medios
+                for (let i = 0; i < numMedios2; i++) {
                     const u = 0.3 + Math.random() * 0.45;
                     let size = Xc * Math.pow(-Math.log(1 - u), 1 / n);
                     size = Math.max(P50 * 0.5, Math.min(size, P80));
@@ -3386,16 +3394,14 @@
                     rockStats.medios++;
                 }
 
-                // === ZONA DE INTERACCIÓN (donde se superponen conos 1 y 2) ===
-                // Mayor fragmentación en esta zona
-                for (let i = 0; i < 6; i++) {
+                // Zona de interacción
+                for (let i = 0; i < numInteraccion; i++) {
                     const u = 0.15 + Math.random() * 0.35;
                     let size = Xc * Math.pow(-Math.log(1 - u), 1 / (n * 1.4));
                     size = Math.max(0.15, Math.min(size, P50 * 0.8));
                     const rock = createRockMesh(size, 0x22c55e);
                     const angle = Math.random() * Math.PI * 2;
                     const dist = Math.random() * zones.rf * 0.6;
-                    // Entre APD1 y APD2
                     const yPos = pozo.apdY2 + Math.random() * (Math.abs(pozo.apdY2) - Math.abs(pozo.apdY1));
                     rock.position.set(pozo.x + Math.cos(angle) * dist, yPos, pozo.z + Math.sin(angle) * dist);
                     scene.add(rock);
@@ -3403,8 +3409,8 @@
                     rockStats.finos++;
                 }
 
-                // === GRUESOS (reducidos por doble taco, en periferia) ===
-                for (let i = 0; i < 3; i++) {
+                // Gruesos
+                for (let i = 0; i < numGruesos; i++) {
                     const u = 0.7 + Math.random() * 0.25;
                     let size = Xc * Math.pow(-Math.log(1 - u), 1 / n);
                     size = Math.max(P80 * 0.6, Math.min(size, 3.5));
@@ -3419,27 +3425,27 @@
                 }
 
             } else {
-                // ============================================================
-                // FRAGMENTOS MODELO SIMPLE (UN CONO hacia superficie)
-                // ============================================================
-                
-                // Finos cerca del APD, distribuidos hacia superficie
-                for (let i = 0; i < 10; i++) {
+                // MODELO SIMPLE - Rocas reducidas
+                const numFinos = Math.ceil(5 * rocksMultiplier);
+                const numMedios = Math.ceil(5 * rocksMultiplier);
+                const numGruesos = Math.ceil(3 * rocksMultiplier);
+
+                // Finos
+                for (let i = 0; i < numFinos; i++) {
                     const u = Math.random() * 0.4;
                     let size = Xc * Math.pow(-Math.log(1 - u * 0.4), 1 / (n * 1.5));
                     size = Math.max(0.15, Math.min(size, P50 * 0.7));
                     const rock = createRockMesh(size, 0x22c55e);
                     const angle = Math.random() * Math.PI * 2;
                     const dist = Math.random() * zones.rc * 0.85;
-                    // Hacia arriba desde APD
                     rock.position.set(pozo.x + Math.cos(angle) * dist, pozo.apdY1 + Math.random() * Math.abs(pozo.apdY1) * 0.7, pozo.z + Math.sin(angle) * dist);
                     scene.add(rock);
                     rockObjects3D.push(rock);
                     rockStats.finos++;
                 }
 
-                // Medios en zona rf (hacia superficie)
-                for (let i = 0; i < 10; i++) {
+                // Medios
+                for (let i = 0; i < numMedios; i++) {
                     const u = 0.3 + Math.random() * 0.45;
                     let size = Xc * Math.pow(-Math.log(1 - u), 1 / n);
                     size = Math.max(P50 * 0.5, Math.min(size, P80));
@@ -3452,8 +3458,8 @@
                     rockStats.medios++;
                 }
 
-                // Gruesos en zona rd (periferia)
-                for (let i = 0; i < 6; i++) {
+                // Gruesos
+                for (let i = 0; i < numGruesos; i++) {
                     const u = 0.65 + Math.random() * 0.33;
                     let size = Xc * Math.pow(-Math.log(1 - u), 1 / n);
                     size = Math.max(P80 * 0.7, Math.min(size, 5));
@@ -3471,17 +3477,31 @@
             updateRockStatsDisplay();
         }
 
+        // OPTIMIZACIÓN: Cache de geometrías de rocas para reutilizar
+        const rockGeometryCache = {
+            small: null,
+            medium: null,
+            large: null
+        };
+
         function createRockMesh(sizeInches, color) {
             const size = sizeInches * 0.1;
-            const geo = new THREE.DodecahedronGeometry(size, 0);
-            const positions = geo.attributes.position;
-            for (let j = 0; j < positions.count; j++) {
-                positions.setX(j, positions.getX(j) * (0.6 + Math.random() * 0.8));
-                positions.setY(j, positions.getY(j) * (0.6 + Math.random() * 0.8));
-                positions.setZ(j, positions.getZ(j) * (0.6 + Math.random() * 0.8));
+            
+            // OPTIMIZACIÓN: Usar OctahedronGeometry en lugar de Dodecahedron (menos vértices)
+            // y cachear la geometría base para reutilizarla
+            let baseGeo;
+            const sizeCategory = size < 0.2 ? 'small' : (size < 0.4 ? 'medium' : 'large');
+            
+            if (!rockGeometryCache[sizeCategory]) {
+                // Crear geometría base solo una vez por categoría
+                rockGeometryCache[sizeCategory] = new THREE.OctahedronGeometry(1, 0);
             }
-            geo.computeVertexNormals();
-            const rock = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color, flatShading: true }));
+            
+            // Clonar y escalar
+            baseGeo = rockGeometryCache[sizeCategory].clone();
+            baseGeo.scale(size, size * (0.7 + Math.random() * 0.6), size);
+            
+            const rock = new THREE.Mesh(baseGeo, new THREE.MeshPhongMaterial({ color, flatShading: true }));
             rock.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
             return rock;
         }
@@ -3516,70 +3536,134 @@
             const toX = x => offsetX + x * scale;
             const toY = z => offsetY + z * scale;
 
-            // Ondas y zonas
-            waveData.pozos.forEach(pozo => {
+            // OPTIMIZACIÓN: Pre-calcular valores constantes
+            const rdScale = zones.rd * scale;
+            const rfScale = zones.rf * scale;
+            const rcScale = zones.rc * scale;
+            const PI2 = Math.PI * 2;
+
+            // OPTIMIZACIÓN: Dibujar zonas en batch por color (reduce cambios de estado del canvas)
+            // Primero todas las zonas rd (amarillas)
+            ctx.fillStyle = 'rgba(255, 200, 0, 0.1)';
+            ctx.beginPath();
+            for (let i = 0; i < waveData.pozos.length; i++) {
+                const pozo = waveData.pozos[i];
                 if (time >= pozo.detTime) {
                     const cx = toX(pozo.x), cy = toY(pozo.z);
+                    const progress = Math.min(1, (time - pozo.detTime) / 120);
+                    const rdPx = rdScale * progress;
+                    ctx.moveTo(cx + rdPx, cy);
+                    ctx.arc(cx, cy, rdPx, 0, PI2);
+                }
+            }
+            ctx.fill();
+
+            // Zonas rf (naranjas)
+            ctx.fillStyle = 'rgba(255, 100, 0, 0.18)';
+            ctx.beginPath();
+            for (let i = 0; i < waveData.pozos.length; i++) {
+                const pozo = waveData.pozos[i];
+                if (time >= pozo.detTime) {
+                    const cx = toX(pozo.x), cy = toY(pozo.z);
+                    const progress = Math.min(1, (time - pozo.detTime) / 120);
+                    const rfPx = rfScale * progress;
+                    ctx.moveTo(cx + rfPx, cy);
+                    ctx.arc(cx, cy, rfPx, 0, PI2);
+                }
+            }
+            ctx.fill();
+
+            // Zonas rc (rojas)
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
+            ctx.beginPath();
+            for (let i = 0; i < waveData.pozos.length; i++) {
+                const pozo = waveData.pozos[i];
+                if (time >= pozo.detTime) {
+                    const cx = toX(pozo.x), cy = toY(pozo.z);
+                    const progress = Math.min(1, (time - pozo.detTime) / 120);
+                    const rcPx = rcScale * progress;
+                    ctx.moveTo(cx + rcPx, cy);
+                    ctx.arc(cx, cy, rcPx, 0, PI2);
+                }
+            }
+            ctx.fill();
+
+            // OPTIMIZACIÓN: Ondas simplificadas - solo círculos con stroke en lugar de gradientes radiales
+            ctx.strokeStyle = 'rgba(0, 255, 220, 0.4)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 0; i < waveData.pozos.length; i++) {
+                const pozo = waveData.pozos[i];
+                if (time >= pozo.detTime) {
                     const elapsed = time - pozo.detTime;
                     const waveRadius = (elapsed / 1000) * 4500 * scale;
-                    const progress = Math.min(1, elapsed / 120);
-
-                    const rdPx = zones.rd * scale * progress;
-                    ctx.beginPath();
-                    ctx.arc(cx, cy, rdPx, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 200, 0, ${0.1 * progress})`;
-                    ctx.fill();
-
-                    const rfPx = zones.rf * scale * progress;
-                    ctx.beginPath();
-                    ctx.arc(cx, cy, rfPx, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 100, 0, ${0.18 * progress})`;
-                    ctx.fill();
-
-                    const rcPx = zones.rc * scale * progress;
-                    ctx.beginPath();
-                    ctx.arc(cx, cy, rcPx, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 0, 0, ${0.3 * progress})`;
-                    ctx.fill();
-
                     if (waveRadius > 0 && waveRadius < 200) {
-                        const grad = ctx.createRadialGradient(cx, cy, Math.max(0, waveRadius - 3), cx, cy, waveRadius + 3);
-                        grad.addColorStop(0, 'rgba(0, 200, 255, 0)');
-                        grad.addColorStop(0.5, `rgba(0, 255, 220, ${Math.max(0.05, 0.3 - waveRadius / 180)})`);
-                        grad.addColorStop(1, 'rgba(0, 200, 255, 0)');
-                        ctx.beginPath();
-                        ctx.arc(cx, cy, waveRadius, 0, Math.PI * 2);
-                        ctx.fillStyle = grad;
-                        ctx.fill();
+                        const cx = toX(pozo.x), cy = toY(pozo.z);
+                        ctx.moveTo(cx + waveRadius, cy);
+                        ctx.arc(cx, cy, waveRadius, 0, PI2);
                     }
                 }
-            });
+            }
+            ctx.stroke();
 
-            // Pozos
-            waveData.pozos.forEach(pozo => {
-                const cx = toX(pozo.x), cy = toY(pozo.z);
-                const det = time >= pozo.detTime;
-                
-                if (params.dobleTaco) {
-                    ctx.beginPath();
-                    ctx.arc(cx, cy, 7, 0, Math.PI * 2);
-                    ctx.fillStyle = det ? 'rgba(124, 58, 237, 0.3)' : 'rgba(124, 58, 237, 0.1)';
-                    ctx.fill();
-                }
-                
+            // OPTIMIZACIÓN: Dibujar todos los pozos en batch
+            // Primero anillos doble taco si aplica
+            if (params.dobleTaco) {
                 ctx.beginPath();
-                ctx.arc(cx, cy, 5, 0, Math.PI * 2);
-                ctx.fillStyle = det ? '#ff6b35' : '#1e293b';
+                for (let i = 0; i < waveData.pozos.length; i++) {
+                    const pozo = waveData.pozos[i];
+                    const cx = toX(pozo.x), cy = toY(pozo.z);
+                    const det = time >= pozo.detTime;
+                    ctx.fillStyle = det ? 'rgba(124, 58, 237, 0.3)' : 'rgba(124, 58, 237, 0.1)';
+                    ctx.moveTo(cx + 7, cy);
+                    ctx.arc(cx, cy, 7, 0, PI2);
+                }
                 ctx.fill();
-                ctx.strokeStyle = det ? '#ffaa00' : '#475569';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-                
-                ctx.fillStyle = det ? '#fff' : '#9aa0a6';
+            }
+
+            // Pozos no detonados (batch)
+            ctx.fillStyle = '#1e293b';
+            ctx.beginPath();
+            for (let i = 0; i < waveData.pozos.length; i++) {
+                const pozo = waveData.pozos[i];
+                if (time < pozo.detTime) {
+                    const cx = toX(pozo.x), cy = toY(pozo.z);
+                    ctx.moveTo(cx + 5, cy);
+                    ctx.arc(cx, cy, 5, 0, PI2);
+                }
+            }
+            ctx.fill();
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Pozos detonados (batch)
+            ctx.fillStyle = '#ff6b35';
+            ctx.beginPath();
+            for (let i = 0; i < waveData.pozos.length; i++) {
+                const pozo = waveData.pozos[i];
+                if (time >= pozo.detTime) {
+                    const cx = toX(pozo.x), cy = toY(pozo.z);
+                    ctx.moveTo(cx + 5, cy);
+                    ctx.arc(cx, cy, 5, 0, PI2);
+                }
+            }
+            ctx.fill();
+            ctx.strokeStyle = '#ffaa00';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // IDs de pozos (solo si hay pocos pozos para no saturar)
+            if (waveData.pozos.length <= 100) {
                 ctx.font = 'bold 4px JetBrains Mono';
                 ctx.textAlign = 'center';
-                ctx.fillText(pozo.id, cx, cy + 1.5);
-            });
+                for (let i = 0; i < waveData.pozos.length; i++) {
+                    const pozo = waveData.pozos[i];
+                    const cx = toX(pozo.x), cy = toY(pozo.z);
+                    ctx.fillStyle = time >= pozo.detTime ? '#fff' : '#9aa0a6';
+                    ctx.fillText(pozo.id, cx, cy + 1.5);
+                }
+            }
 
             if (params.dobleTaco) {
                 ctx.fillStyle = 'rgba(124, 58, 237, 0.8)';
@@ -3980,34 +4064,29 @@
                     if (!pozo.zoneAdded) {
                         pozo.zoneAdded = true;
 
+                        // OPTIMIZACIÓN: Usar menos segmentos en geometrías de animación
+                        const ANIM_CONE_SEGMENTS = 8;
+                        const ANIM_SPHERE_SEGMENTS = 6;
+
                         if (params.dobleTaco && pozo.apdY2 && pozo.apdY3) {
                             // ============================================================
-                            // MODELO DOBLE TACO - SECUENCIA: ABAJO → ARRIBA
+                            // MODELO DOBLE TACO - SECUENCIA: ABAJO → ARRIBA (OPTIMIZADO)
                             // ============================================================
-                            // Orden de detonación:
-                            // 1° APD3 (fondo) - detona PRIMERO
-                            // 2° APD2 (taco intermedio) - detona SEGUNDO  
-                            // 3° APD1 (superior) - detona ÚLTIMO
-                            //
-                            // Cada APD genera cono hacia superficie (cara libre principal)
-                            // + componente hacia abajo (cara libre secundaria creada por
-                            //   detonación previa)
                             
                             // === CONO 3: APD3 detona PRIMERO ===
-                            // Solo tiene cara libre arriba (superficie), cono hacia ARRIBA
-                            const cone3_height = Math.abs(pozo.apdY3); // Hasta superficie
+                            const cone3_height = Math.abs(pozo.apdY3);
                             const cone3_rd = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rd * 0.8, cone3_height * 0.6, 20, 1, true),
+                                new THREE.ConeGeometry(zones.rd * 0.8, cone3_height * 0.6, ANIM_CONE_SEGMENTS, 1, true),
                                 new THREE.MeshBasicMaterial({ color: 0xffcc00, transparent: true, opacity: 0.05, side: THREE.DoubleSide })
                             );
-                            cone3_rd.rotation.x = Math.PI; // Punta abajo, base arriba
+                            cone3_rd.rotation.x = Math.PI;
                             cone3_rd.position.set(pozo.x, pozo.apdY3 + cone3_height * 0.3, pozo.z);
                             scene.add(cone3_rd);
                             zoneObjects3D.push(cone3_rd);
 
                             // Esfera APD3
                             const sphere3 = new THREE.Mesh(
-                                new THREE.SphereGeometry(zones.rc * 0.8, 16, 16),
+                                new THREE.SphereGeometry(zones.rc * 0.8, ANIM_SPHERE_SEGMENTS, ANIM_SPHERE_SEGMENTS),
                                 new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.15 })
                             );
                             sphere3.position.set(pozo.x, pozo.apdY3, pozo.z);
@@ -4015,21 +4094,19 @@
                             zoneObjects3D.push(sphere3);
 
                             // === CONO 2: APD2 detona SEGUNDO ===
-                            // Cara libre arriba (superficie) + cara libre abajo (APD3 ya fragmentó)
-                            // Cono principal hacia ARRIBA
                             const cone2_height_up = Math.abs(pozo.apdY2);
                             const cone2_rd = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rd * 1.0, cone2_height_up * 0.7, 20, 1, true),
+                                new THREE.ConeGeometry(zones.rd * 1.0, cone2_height_up * 0.7, ANIM_CONE_SEGMENTS, 1, true),
                                 new THREE.MeshBasicMaterial({ color: 0x7c3aed, transparent: true, opacity: 0.06, side: THREE.DoubleSide })
                             );
-                            cone2_rd.rotation.x = Math.PI; // Punta abajo, base arriba
+                            cone2_rd.rotation.x = Math.PI;
                             cone2_rd.position.set(pozo.x, pozo.apdY2 + cone2_height_up * 0.35, pozo.z);
                             scene.add(cone2_rd);
                             zoneObjects3D.push(cone2_rd);
 
                             // Zona de fractura cono 2 hacia arriba
                             const cone2_rf = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rf * 0.85, cone2_height_up * 0.6, 20, 1, true),
+                                new THREE.ConeGeometry(zones.rf * 0.85, cone2_height_up * 0.6, ANIM_CONE_SEGMENTS, 1, true),
                                 new THREE.MeshBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.07, side: THREE.DoubleSide })
                             );
                             cone2_rf.rotation.x = Math.PI;
@@ -4037,20 +4114,20 @@
                             scene.add(cone2_rf);
                             zoneObjects3D.push(cone2_rf);
 
-                            // Cono 2 componente hacia ABAJO (cara libre creada por APD3)
+                            // Cono 2 componente hacia ABAJO
                             const cone2_height_down = dobleTacoCalc.Lc2 * 0.5;
                             const cone2_down = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rf * 0.5, cone2_height_down, 16, 1, true),
+                                new THREE.ConeGeometry(zones.rf * 0.5, cone2_height_down, ANIM_CONE_SEGMENTS, 1, true),
                                 new THREE.MeshBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.04, side: THREE.DoubleSide })
                             );
-                            cone2_down.rotation.x = 0; // Punta arriba, base abajo
+                            cone2_down.rotation.x = 0;
                             cone2_down.position.set(pozo.x, pozo.apdY2 - cone2_height_down / 2, pozo.z);
                             scene.add(cone2_down);
                             zoneObjects3D.push(cone2_down);
 
                             // Esfera APD2
                             const sphere2 = new THREE.Mesh(
-                                new THREE.SphereGeometry(zones.rc * 0.9, 16, 16),
+                                new THREE.SphereGeometry(zones.rc * 0.9, ANIM_SPHERE_SEGMENTS, ANIM_SPHERE_SEGMENTS),
                                 new THREE.MeshBasicMaterial({ color: 0x7c3aed, transparent: true, opacity: 0.18 })
                             );
                             sphere2.position.set(pozo.x, pozo.apdY2, pozo.z);
@@ -4058,21 +4135,19 @@
                             zoneObjects3D.push(sphere2);
 
                             // === CONO 1: APD1 detona ÚLTIMO ===
-                            // Cara libre arriba (superficie) + cara libre abajo (APD2 y APD3 ya fragmentaron)
-                            // Cono principal hacia ARRIBA
                             const cone1_height = Math.abs(pozo.apdY1);
                             const cone1_rd = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rd * 1.2, cone1_height, 20, 1, true),
+                                new THREE.ConeGeometry(zones.rd * 1.2, cone1_height, ANIM_CONE_SEGMENTS, 1, true),
                                 new THREE.MeshBasicMaterial({ color: 0xffcc00, transparent: true, opacity: 0.07, side: THREE.DoubleSide })
                             );
-                            cone1_rd.rotation.x = Math.PI; // Punta abajo, base arriba
+                            cone1_rd.rotation.x = Math.PI;
                             cone1_rd.position.set(pozo.x, pozo.apdY1 + cone1_height / 2, pozo.z);
                             scene.add(cone1_rd);
                             zoneObjects3D.push(cone1_rd);
 
                             // Zona de fractura cono 1
                             const cone1_rf = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rf * 1.0, cone1_height * 0.85, 20, 1, true),
+                                new THREE.ConeGeometry(zones.rf * 1.0, cone1_height * 0.85, ANIM_CONE_SEGMENTS, 1, true),
                                 new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.08, side: THREE.DoubleSide })
                             );
                             cone1_rf.rotation.x = Math.PI;
@@ -4080,43 +4155,43 @@
                             scene.add(cone1_rf);
                             zoneObjects3D.push(cone1_rf);
 
-                            // Cono 1 componente hacia ABAJO (cara libre creada por APD2)
+                            // Cono 1 componente hacia ABAJO
                             const cone1_height_down = dobleTacoCalc.Lc1 * 0.4;
                             const cone1_down = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rf * 0.4, cone1_height_down, 16, 1, true),
+                                new THREE.ConeGeometry(zones.rf * 0.4, cone1_height_down, ANIM_CONE_SEGMENTS, 1, true),
                                 new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.04, side: THREE.DoubleSide })
                             );
-                            cone1_down.rotation.x = 0; // Punta arriba, base abajo
+                            cone1_down.rotation.x = 0;
                             cone1_down.position.set(pozo.x, pozo.apdY1 - cone1_height_down / 2, pozo.z);
                             scene.add(cone1_down);
                             zoneObjects3D.push(cone1_down);
 
                             // Esfera APD1
                             const sphere1 = new THREE.Mesh(
-                                new THREE.SphereGeometry(zones.rc, 16, 16),
+                                new THREE.SphereGeometry(zones.rc, ANIM_SPHERE_SEGMENTS, ANIM_SPHERE_SEGMENTS),
                                 new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.15 })
                             );
                             sphere1.position.set(pozo.x, pozo.apdY1, pozo.z);
                             scene.add(sphere1);
                             zoneObjects3D.push(sphere1);
 
-                            // === ZONA DE INTERACCIÓN (superposición de conos) ===
+                            // === ZONA DE INTERACCIÓN (simplificada) ===
                             const interactionZone = new THREE.Mesh(
-                                new THREE.CylinderGeometry(zones.rf * 0.6, zones.rf * 0.5, params.Ti * 1.2, 16, 1, true),
+                                new THREE.CylinderGeometry(zones.rf * 0.6, zones.rf * 0.5, params.Ti * 1.2, ANIM_CONE_SEGMENTS, 1, true),
                                 new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.08, side: THREE.DoubleSide })
                             );
                             interactionZone.position.set(pozo.x, pozo.apdY2 + params.Ti / 2, pozo.z);
                             scene.add(interactionZone);
                             zoneObjects3D.push(interactionZone);
 
-                            // Anillos en cada APD (con número de secuencia)
+                            // OPTIMIZACIÓN: Anillos simplificados (menos segmentos)
                             const ringData = [
-                                { y: pozo.apdY3, color: 0xffcc00, r: zones.rf * 0.5 },  // 1° 
-                                { y: pozo.apdY2, color: 0xa855f7, r: zones.rf * 0.6 },  // 2°
-                                { y: pozo.apdY1, color: 0xffcc00, r: zones.rf * 0.7 }   // 3°
+                                { y: pozo.apdY3, color: 0xffcc00, r: zones.rf * 0.5 },
+                                { y: pozo.apdY2, color: 0xa855f7, r: zones.rf * 0.6 },
+                                { y: pozo.apdY1, color: 0xffcc00, r: zones.rf * 0.7 }
                             ];
                             ringData.forEach(rd => {
-                                const ringGeo = new THREE.TorusGeometry(rd.r, 0.05, 8, 24);
+                                const ringGeo = new THREE.TorusGeometry(rd.r, 0.05, 4, 12);
                                 const ringMesh = new THREE.Mesh(
                                     ringGeo,
                                     new THREE.MeshBasicMaterial({ color: rd.color, transparent: true, opacity: 0.2 })
@@ -4129,12 +4204,12 @@
 
                         } else {
                             // ============================================================
-                            // MODELO SIMPLE: UN CONO QUE SE ABRE HACIA ARRIBA
+                            // MODELO SIMPLE: UN CONO QUE SE ABRE HACIA ARRIBA (OPTIMIZADO)
                             // ============================================================
                             const coneHeight = Math.abs(pozo.apdY1);
 
                             const cone1 = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rd * 1.3, coneHeight, 20, 1, true),
+                                new THREE.ConeGeometry(zones.rd * 1.3, coneHeight, ANIM_CONE_SEGMENTS, 1, true),
                                 new THREE.MeshBasicMaterial({ color: 0xffcc00, transparent: true, opacity: 0.05, side: THREE.DoubleSide })
                             );
                             cone1.rotation.x = Math.PI;
@@ -4143,7 +4218,7 @@
                             zoneObjects3D.push(cone1);
 
                             const cone2 = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rf * 1.15, coneHeight * 0.85, 20, 1, true),
+                                new THREE.ConeGeometry(zones.rf * 1.15, coneHeight * 0.85, ANIM_CONE_SEGMENTS, 1, true),
                                 new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.08, side: THREE.DoubleSide })
                             );
                             cone2.rotation.x = Math.PI;
@@ -4152,7 +4227,7 @@
                             zoneObjects3D.push(cone2);
 
                             const sphere = new THREE.Mesh(
-                                new THREE.SphereGeometry(zones.rc, 16, 16),
+                                new THREE.SphereGeometry(zones.rc, ANIM_SPHERE_SEGMENTS, ANIM_SPHERE_SEGMENTS),
                                 new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.12 })
                             );
                             sphere.position.set(pozo.x, pozo.apdY1, pozo.z);
