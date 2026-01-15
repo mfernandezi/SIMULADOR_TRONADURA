@@ -3927,61 +3927,111 @@
             // DATOS HISTÓRICOS / REALES (si están cargados)
             // ============================================================
             if (datosHistoricos && datosHistoricos.length > 0) {
-                // Dibujar puntos de datos reales
-                ctx.fillStyle = '#EAAA00';
+                // Dibujar curva ajustada (línea suave)
                 ctx.strokeStyle = '#EAAA00';
-                ctx.lineWidth = 2;
-                
-                // Línea conectando puntos
+                ctx.lineWidth = 2.5;
+                ctx.setLineDash([]);
                 ctx.beginPath();
+                
+                let started = false;
                 datosHistoricos.forEach((punto, i) => {
-                    const x = toX(punto.tamano);
-                    const y = toY(punto.pasante);
-                    if (i === 0) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        ctx.lineTo(x, y);
+                    if (punto.tamano > 0 && punto.tamano <= xMax && punto.pasante > 0 && punto.pasante <= 100) {
+                        const x = toX(punto.tamano);
+                        const y = toY(punto.pasante);
+                        if (!started) {
+                            ctx.moveTo(x, y);
+                            started = true;
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
                     }
                 });
                 ctx.stroke();
                 
-                // Puntos individuales
-                datosHistoricos.forEach(punto => {
-                    const x = toX(punto.tamano);
-                    const y = toY(punto.pasante);
-                    
-                    // Círculo relleno
-                    ctx.beginPath();
-                    ctx.arc(x, y, 4, 0, Math.PI * 2);
-                    ctx.fillStyle = '#EAAA00';
-                    ctx.fill();
-                    ctx.strokeStyle = '#000';
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                });
+                // Dibujar puntos reales (P20, P50, P80, P100) como marcadores grandes
+                if (datosHistoricos.puntosReales) {
+                    datosHistoricos.puntosReales.forEach(punto => {
+                        if (punto.tamano > 0 && punto.tamano <= xMax) {
+                            const x = toX(punto.tamano);
+                            const y = toY(punto.pasante);
+                            
+                            // Círculo grande con borde
+                            ctx.beginPath();
+                            ctx.arc(x, y, 5, 0, Math.PI * 2);
+                            ctx.fillStyle = '#EAAA00';
+                            ctx.fill();
+                            ctx.strokeStyle = '#000';
+                            ctx.lineWidth = 1.5;
+                            ctx.stroke();
+                            
+                            // Etiqueta del percentil
+                            ctx.fillStyle = '#EAAA00';
+                            ctx.font = 'bold 5px JetBrains Mono';
+                            ctx.textAlign = 'left';
+                            ctx.fillText(`P${punto.pasante}: ${punto.tamano.toFixed(2)}"`, x + 6, y + 2);
+                        }
+                    });
+                } else {
+                    // Fallback: dibujar todos los puntos si no hay puntosReales
+                    datosHistoricos.forEach(punto => {
+                        if (punto.pasante === 20 || punto.pasante === 50 || punto.pasante === 80 || punto.pasante >= 95) {
+                            const x = toX(punto.tamano);
+                            const y = toY(punto.pasante);
+                            ctx.beginPath();
+                            ctx.arc(x, y, 4, 0, Math.PI * 2);
+                            ctx.fillStyle = '#EAAA00';
+                            ctx.fill();
+                            ctx.strokeStyle = '#000';
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+                        }
+                    });
+                }
                 
                 // Leyenda para datos reales
                 ctx.fillStyle = '#EAAA00';
-                ctx.fillRect(m.l + 5, H - m.b - 25, 10, 4);
-                ctx.fillStyle = '#EAAA00';
+                ctx.fillRect(m.l + 5, H - m.b - 32, 12, 3);
                 ctx.font = 'bold 6px JetBrains Mono';
                 ctx.textAlign = 'left';
-                ctx.fillText('● DATOS REALES', m.l + 18, H - m.b - 22);
+                ctx.fillText('━ DATOS HISTÓRICOS', m.l + 20, H - m.b - 29);
                 
-                // Calcular y mostrar error
-                if (theoreticalValues.Xc > 0) {
-                    let errorSum = 0;
-                    let count = 0;
-                    datosHistoricos.forEach(punto => {
-                        const P_teorico = 100 * (1 - Math.exp(-Math.pow(punto.tamano / Xc, n_draw)));
-                        errorSum += Math.abs(P_teorico - punto.pasante);
-                        count++;
-                    });
-                    const errorMedio = errorSum / count;
-                    
-                    ctx.fillStyle = errorMedio < 5 ? '#4AC5BB' : (errorMedio < 10 ? '#EAAA00' : '#D22630');
+                // Mostrar parámetros del ajuste R-R
+                if (datosHistoricos.ajusteRR) {
+                    const ajuste = datosHistoricos.ajusteRR;
+                    ctx.fillStyle = '#64CCC9';
                     ctx.font = '5px JetBrains Mono';
-                    ctx.fillText(`Error medio: ${errorMedio.toFixed(1)}%`, m.l + 18, H - m.b - 14);
+                    ctx.fillText(`Ajuste R-R: Xc=${ajuste.Xc.toFixed(2)}" n=${ajuste.n.toFixed(2)}`, m.l + 20, H - m.b - 21);
+                    
+                    // Calcular error vs modelo teórico actual
+                    if (theoreticalValues.Xc > 0) {
+                        const Xc_teo = theoreticalValues.Xc;
+                        const n_teo = params.dobleTaco ? dobleTacoCalc.n_eff : params.n;
+                        const deltaXc = ((ajuste.Xc - Xc_teo) / Xc_teo * 100).toFixed(1);
+                        const deltaN = ((ajuste.n - n_teo) / n_teo * 100).toFixed(1);
+                        
+                        const colorDelta = Math.abs(parseFloat(deltaXc)) < 15 ? '#4AC5BB' : '#D22630';
+                        ctx.fillStyle = colorDelta;
+                        ctx.fillText(`ΔXc=${deltaXc}% Δn=${deltaN}%`, m.l + 20, H - m.b - 13);
+                    }
+                } else {
+                    // Calcular error medio vs modelo teórico
+                    if (theoreticalValues.Xc > 0) {
+                        let errorSum = 0;
+                        let count = 0;
+                        datosHistoricos.forEach(punto => {
+                            if (punto.pasante > 0 && punto.pasante < 100) {
+                                const P_teorico = 100 * (1 - Math.exp(-Math.pow(punto.tamano / Xc, n_draw)));
+                                errorSum += Math.abs(P_teorico - punto.pasante);
+                                count++;
+                            }
+                        });
+                        if (count > 0) {
+                            const errorMedio = errorSum / count;
+                            ctx.fillStyle = errorMedio < 5 ? '#4AC5BB' : (errorMedio < 10 ? '#EAAA00' : '#D22630');
+                            ctx.font = '5px JetBrains Mono';
+                            ctx.fillText(`Error vs modelo: ${errorMedio.toFixed(1)}%`, m.l + 20, H - m.b - 21);
+                        }
+                    }
                 }
             }
         }
@@ -4920,7 +4970,7 @@
             };
             
             if (isExcel) {
-                reader.readAsArrayAmortiguadores(file);
+                reader.readAsArrayBuffer(file);
             } else {
                 reader.readAsText(file);
             }
@@ -4929,15 +4979,15 @@
         }
         
         function procesarExcelMLP(jsonData) {
-            // Estructura del archivo MLP:
+            // Estructura del archivo MLP (P80 Actualizado):
             // Fila 0: Vacía
             // Fila 1: Categorías (INFORMACION GENERAL, PARAMETROS, RESULTADOS, etc.)
             // Fila 2: Headers reales (MES/AÑO, Fecha de tronadura, Fase, etc.)
             // Fila 3+: Datos
             
-            // Columnas importantes según MLP:
-            // L(11): Diámetro, M(12): BxS, N(13): Tiempo entre Pozos Filas ms
-            // O(14): UGT, P(15): Fc, Q(16): Tipo Explosivo, R(17): Taco Gravilla/Aire
+            // Columnas importantes según archivo P80:
+            // D(3): Fase, L(11): Diámetro, M(12): BxS, N(13): Tiempo entre Pozos
+            // O(14): UGT, P(15): Fc, Q(16): Tipo Explosivo, R(17): Taco
             // W(22): P20, X(23): P50, Y(24): P80, Z(25): P100
             
             const datos = [];
@@ -4945,69 +4995,64 @@
             // Headers están en fila 2 (índice 2)
             const headers = jsonData[2] || [];
             
-            // Mapear columnas por nombre (respaldo) y posición fija
+            // Mapear columnas por posición fija del archivo P80
             const colMap = {
-                fecha: 1,
-                fase: 3,
-                banco: 4,
-                diametro: 11,      // Col L
-                bxs: 12,           // Col M
-                tiempoRetardo: 13, // Col N - Tiempo entre Pozos Filas ms
-                ugt: 14,           // Col O
-                fc: 15,            // Col P
-                explosivo: 16,     // Col Q
-                taco: 17,          // Col R - Taco Gravilla / Aire
-                p20: 22,           // Col W
-                p50: 23,           // Col X
-                p80: 24,           // Col Y
-                p100: 25           // Col Z
+                fecha: 1,         // Col B
+                fase: 3,          // Col D
+                banco: 4,         // Col E
+                diametro: 11,     // Col L
+                bxs: 12,          // Col M
+                tiempoRetardo: 13,// Col N
+                ugt: 14,          // Col O
+                fc: 15,           // Col P
+                explosivo: 16,    // Col Q
+                taco: 17,         // Col R
+                p20: 22,          // Col W
+                p50: 23,          // Col X
+                p80: 24,          // Col Y
+                p100: 25          // Col Z
             };
             
-            // Verificar headers por si cambian posiciones
+            // Verificar headers por si cambian posiciones (búsqueda flexible)
             headers.forEach((h, i) => {
                 if (!h) return;
                 const header = h.toString().toLowerCase().trim();
-                if (header === 'p20') colMap.p20 = i;
-                if (header === 'p50') colMap.p50 = i;
-                if (header === 'p80') colMap.p80 = i;
-                if (header === 'p100') colMap.p100 = i;
-                if (header === 'ugt') colMap.ugt = i;
-                if (header === 'fc') colMap.fc = i;
+                if (header === 'p20' || header === '% 20' || header.includes('p20')) colMap.p20 = i;
+                if (header === 'p50' || header === '% 50' || header.includes('p50')) colMap.p50 = i;
+                if (header === 'p80' || header === '% 80' || header.includes('p80')) colMap.p80 = i;
+                if (header === 'p100' || header === '% 100' || header.includes('p100')) colMap.p100 = i;
+                if (header === 'ugt' || header.includes('ugt')) colMap.ugt = i;
+                if (header === 'fc' || header.includes('factor de carga')) colMap.fc = i;
                 if (header.includes('diámetro') || header.includes('diametro')) colMap.diametro = i;
-                if (header === 'bxs') colMap.bxs = i;
-                if (header.includes('tipo explosivo')) colMap.explosivo = i;
-                if (header.includes('tiempo entre pozos')) colMap.tiempoRetardo = i;
-                if (header.includes('taco')) colMap.taco = i;
+                if (header === 'bxs' || header.includes('bxs') || header.includes('malla')) colMap.bxs = i;
+                if (header.includes('tipo explosivo') || header.includes('explosivo')) colMap.explosivo = i;
+                if (header.includes('tiempo entre pozos') || header.includes('retardo')) colMap.tiempoRetardo = i;
+                if (header.includes('taco') || header.includes('gravilla')) colMap.taco = i;
+                if (header === 'fase' || header.includes('fase')) colMap.fase = i;
             });
             
-            console.log('Mapa de columnas MLP:', colMap);
+            console.log('Mapa de columnas MLP detectado:', colMap);
             
             // Procesar datos (empezar desde fila 3, índice 3)
             for (let i = 3; i < jsonData.length; i++) {
                 const row = jsonData[i];
                 if (!row || row.length < 20) continue;
                 
-                // Validar que todas las columnas importantes tengan datos
+                // CRÍTICO: Solo requerir P80 válido (los demás son opcionales para filtros)
                 const p80 = parseFloat(row[colMap.p80]);
-                const p50 = parseFloat(row[colMap.p50]);
-                const p20 = parseFloat(row[colMap.p20]);
-                const p100 = parseFloat(row[colMap.p100]);
-                const diametro = parseFloat(row[colMap.diametro]);
-                const fc = parseFloat(row[colMap.fc]);
+                if (isNaN(p80) || p80 <= 0) continue;
+                
+                // Leer otros valores (pueden ser vacíos)
+                const p50 = parseFloat(row[colMap.p50]) || 0;
+                const p20 = parseFloat(row[colMap.p20]) || 0;
+                const p100 = parseFloat(row[colMap.p100]) || 0;
+                const diametro = parseFloat(row[colMap.diametro]) || 0;
+                const fc = parseFloat(row[colMap.fc]) || 0;
                 const bxsStr = (row[colMap.bxs] || '').toString().trim();
                 const ugtStr = (row[colMap.ugt] || '').toString().trim();
                 const explosivoStr = (row[colMap.explosivo] || '').toString().trim();
-                
-                // Solo incluir si tiene TODOS los datos críticos
-                if (isNaN(p80) || p80 <= 0) continue;
-                if (isNaN(p50) || p50 <= 0) continue;
-                if (isNaN(p20) || p20 <= 0) continue;
-                if (isNaN(p100) || p100 <= 0) continue;
-                if (isNaN(diametro) || diametro <= 0) continue;
-                if (isNaN(fc) || fc <= 0) continue;
-                if (!bxsStr || bxsStr === '-' || !bxsStr.includes('x')) continue;
-                if (!ugtStr || ugtStr === '-' || !ugtStr.toUpperCase().startsWith('UGT')) continue;
-                if (!explosivoStr || explosivoStr === '-') continue;
+                const faseStr = (row[colMap.fase] || '').toString().trim();
+                const tacoStr = (row[colMap.taco] || '').toString().trim();
                 
                 // Parsear BxS para extraer Burden y Spacing
                 let burden = 0, spacing = 0;
@@ -5017,7 +5062,7 @@
                     spacing = parseFloat(bxsMatch[2]);
                 }
                 
-                // Parsear tiempo de retardo (formato "X-Y" ms entre pozos y filas)
+                // Parsear tiempo de retardo
                 let msEntrePozos = 0, msEntreFilas = 0;
                 const tiempoStr = (row[colMap.tiempoRetardo] || '').toString();
                 const tiempoMatch = tiempoStr.match(/(\d+)\s*[-–]\s*(\d+)/);
@@ -5028,7 +5073,7 @@
                 
                 datos.push({
                     fecha: row[colMap.fecha] || '',
-                    fase: (row[colMap.fase] || '').toString().trim(),
+                    fase: faseStr,
                     banco: (row[colMap.banco] || '').toString().trim(),
                     diametro: diametro,
                     bxs: bxsStr,
@@ -5040,7 +5085,7 @@
                     ugt: ugtStr,
                     fc: fc,
                     explosivo: explosivoStr,
-                    taco: (row[colMap.taco] || '').toString().trim(),
+                    taco: tacoStr,
                     p20: p20,
                     p50: p50,
                     p80: p80,
@@ -5048,7 +5093,7 @@
                 });
             }
             
-            console.log(`Procesados ${datos.length} registros COMPLETOS del archivo MLP`);
+            console.log(`Procesados ${datos.length} registros del archivo MLP (P80 válido)`);
             return datos;
         }
         
@@ -5117,14 +5162,19 @@
         }
         
         function construirFiltrosHistorico(datos) {
+            // Aceptar más valores válidos (no solo los que empiezan con "UGT")
+            const esValido = v => v && v.trim() !== '' && v.trim() !== '-' && v.trim() !== '---' && v.trim() !== ' -';
+            
             historicoMetadata = {
-                ugts: [...new Set(datos.map(d => d.ugt).filter(u => u && u !== '-' && u.includes('UGT')))].sort(),
-                explosivos: [...new Set(datos.map(d => d.explosivo).filter(e => e && e !== '-'))].sort(),
-                fases: [...new Set(datos.map(d => d.fase).filter(f => f && f !== '-'))].sort(),
+                ugts: [...new Set(datos.map(d => d.ugt).filter(esValido))].sort(),
+                explosivos: [...new Set(datos.map(d => d.explosivo).filter(esValido))].sort(),
+                fases: [...new Set(datos.map(d => d.fase).filter(f => esValido(f) && !f.includes('MANTENCIÓN') && !f.includes('CORTE ENERGÍA')))].sort(),
                 diametros: [...new Set(datos.map(d => d.diametro).filter(d => d > 0))].sort((a,b) => a-b),
-                bxs: [...new Set(datos.map(d => d.bxs).filter(b => b && b !== '-'))].sort(),
-                tacos: [...new Set(datos.map(d => d.taco).filter(t => t && t !== '-'))].sort()
+                bxs: [...new Set(datos.map(d => d.bxs).filter(b => esValido(b) && b.includes('x')))].sort(),
+                tacos: [...new Set(datos.map(d => d.taco).filter(esValido))].sort()
             };
+            
+            console.log('Metadata de filtros:', historicoMetadata);
             
             // Poblar selects
             const selectUGT = document.getElementById('filtro-ugt');
@@ -5149,7 +5199,7 @@
             
             const selectTaco = document.getElementById('filtro-taco');
             selectTaco.innerHTML = '<option value="">Todos Tacos</option>' + 
-                historicoMetadata.tacos.map(t => `<option value="${t}">${t.substring(0,20)}${t.length > 20 ? '...' : ''}</option>`).join('');
+                historicoMetadata.tacos.map(t => `<option value="${t}">${t.substring(0,25)}${t.length > 25 ? '...' : ''}</option>`).join('');
         }
         
         function aplicarFiltrosHistorico() {
@@ -5164,9 +5214,9 @@
             
             let datosFiltrados = datosHistoricosCompletos.filter(d => {
                 if (filtroUGT && d.ugt !== filtroUGT) return false;
-                if (filtroExp && d.explosivo !== filtroExp) return false;
+                if (filtroExp && !d.explosivo.toLowerCase().includes(filtroExp.toLowerCase())) return false;
                 if (filtroFase && d.fase !== filtroFase) return false;
-                if (filtroDiam && d.diametro !== parseFloat(filtroDiam)) return false;
+                if (filtroDiam && Math.abs(d.diametro - parseFloat(filtroDiam)) > 0.5) return false;
                 if (filtroBxS && d.bxs !== filtroBxS) return false;
                 if (filtroTaco && d.taco !== filtroTaco) return false;
                 return true;
@@ -5179,60 +5229,108 @@
                 return;
             }
             
-            // Construir curva granulométrica agregada
-            const p80Values = datosFiltrados.map(d => d.p80).sort((a,b) => a-b);
-            const p50Values = datosFiltrados.map(d => d.p50).sort((a,b) => a-b);
-            const p20Values = datosFiltrados.map(d => d.p20).sort((a,b) => a-b);
-            const p100Values = datosFiltrados.map(d => d.p100).sort((a,b) => a-b);
+            // Filtrar solo datos con P50, P80, P100 válidos para la curva
+            const datosConCurva = datosFiltrados.filter(d => d.p50 > 0 && d.p80 > 0 && d.p100 > 0);
             
-            const median = arr => arr[Math.floor(arr.length / 2)];
-            const mean = arr => arr.reduce((a,b) => a+b, 0) / arr.length;
-            
-            const p80Med = median(p80Values);
-            const p50Med = median(p50Values);
-            const p20Med = median(p20Values);
-            const p100Med = median(p100Values);
-            
-            // Crear puntos de curva basados en percentiles reales
-            datosHistoricos = [
-                { tamano: p20Med, pasante: 20 },
-                { tamano: p50Med, pasante: 50 },
-                { tamano: p80Med, pasante: 80 },
-                { tamano: p100Med, pasante: 99 }
-            ];
-            
-            // Si hay suficientes datos, agregar más puntos
-            if (datosFiltrados.length > 10) {
-                // Estimar P10 y P30, P60, P90
-                const p10Est = p20Med * 0.5;
-                const p30Est = (p20Med + p50Med) / 2;
-                const p60Est = p50Med + (p80Med - p50Med) * 0.33;
-                const p90Est = p80Med + (p100Med - p80Med) * 0.5;
-                
-                datosHistoricos = [
-                    { tamano: p10Est, pasante: 10 },
-                    { tamano: p20Med, pasante: 20 },
-                    { tamano: p30Est, pasante: 30 },
-                    { tamano: p50Med, pasante: 50 },
-                    { tamano: p60Est, pasante: 60 },
-                    { tamano: p80Med, pasante: 80 },
-                    { tamano: p90Est, pasante: 90 },
-                    { tamano: p100Med, pasante: 99 }
-                ];
-            }
-            
-            // Mostrar estadísticas
+            const mean = arr => arr.length > 0 ? arr.reduce((a,b) => a+b, 0) / arr.length : 0;
+            const median = arr => {
+                if (arr.length === 0) return 0;
+                const sorted = [...arr].sort((a,b) => a-b);
+                return sorted[Math.floor(sorted.length / 2)];
+            };
             const std = arr => {
+                if (arr.length === 0) return 0;
                 const m = mean(arr);
                 return Math.sqrt(arr.reduce((s, v) => s + Math.pow(v - m, 2), 0) / arr.length);
             };
             
+            // Usar datos con curva completa si hay suficientes, sino usar todos los P80
+            const p80Values = datosFiltrados.map(d => d.p80).filter(v => v > 0).sort((a,b) => a-b);
+            const p50Values = datosConCurva.map(d => d.p50).filter(v => v > 0).sort((a,b) => a-b);
+            const p20Values = datosConCurva.map(d => d.p20).filter(v => v > 0).sort((a,b) => a-b);
+            const p100Values = datosConCurva.map(d => d.p100).filter(v => v > 0).sort((a,b) => a-b);
+            
+            const p80Med = median(p80Values);
+            const p50Med = p50Values.length > 0 ? median(p50Values) : p80Med * 0.55;
+            const p20Med = p20Values.length > 0 ? median(p20Values) : p50Med * 0.35;
+            const p100Med = p100Values.length > 0 ? median(p100Values) : p80Med * 2.0;
+            
+            console.log(`Percentiles medianos: P20=${p20Med.toFixed(2)}, P50=${p50Med.toFixed(2)}, P80=${p80Med.toFixed(2)}, P100=${p100Med.toFixed(2)}`);
+            
+            // ===== AJUSTE DE CURVA ROSIN-RAMMLER =====
+            // La distribución R-R es: P(x) = 100 * (1 - exp(-(x/Xc)^n))
+            // Necesitamos encontrar Xc y n que mejor ajusten los datos
+            
+            // Puntos conocidos para el ajuste
+            const puntosAjuste = [];
+            if (p20Med > 0) puntosAjuste.push({ x: p20Med, P: 20 });
+            if (p50Med > 0) puntosAjuste.push({ x: p50Med, P: 50 });
+            if (p80Med > 0) puntosAjuste.push({ x: p80Med, P: 80 });
+            if (p100Med > 0) puntosAjuste.push({ x: p100Med, P: 99 });
+            
+            // Ajustar parámetros Xc y n usando método de mínimos cuadrados
+            let mejorXc = p50Med / Math.pow(0.693, 1/1.5); // Estimación inicial
+            let mejorN = 1.5;
+            let menorError = Infinity;
+            
+            // Búsqueda de grid para encontrar mejor Xc y n
+            for (let nTest = 0.8; nTest <= 3.0; nTest += 0.05) {
+                // Para cada n, calcular Xc óptimo usando P50
+                const Xc_test = p50Med / Math.pow(0.693, 1/nTest);
+                
+                // Calcular error cuadrático medio
+                let errorSum = 0;
+                puntosAjuste.forEach(pt => {
+                    const P_pred = 100 * (1 - Math.exp(-Math.pow(pt.x / Xc_test, nTest)));
+                    errorSum += Math.pow(P_pred - pt.P, 2);
+                });
+                
+                if (errorSum < menorError) {
+                    menorError = errorSum;
+                    mejorXc = Xc_test;
+                    mejorN = nTest;
+                }
+            }
+            
+            console.log(`Ajuste R-R: Xc=${mejorXc.toFixed(3)}", n=${mejorN.toFixed(3)}, Error=${Math.sqrt(menorError/puntosAjuste.length).toFixed(2)}%`);
+            
+            // Crear curva ajustada con más puntos
+            datosHistoricos = [];
+            const percentiles = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 99];
+            
+            percentiles.forEach(P => {
+                // Calcular tamaño x para el percentil P usando la curva ajustada
+                // P = 100 * (1 - exp(-(x/Xc)^n)) => x = Xc * (-ln(1-P/100))^(1/n)
+                const fraccion = P / 100;
+                if (fraccion > 0 && fraccion < 1) {
+                    const tamano = mejorXc * Math.pow(-Math.log(1 - fraccion), 1 / mejorN);
+                    datosHistoricos.push({ tamano, pasante: P });
+                }
+            });
+            
+            // Agregar los puntos reales como marcadores
+            datosHistoricos.puntosReales = [
+                { tamano: p20Med, pasante: 20, real: true },
+                { tamano: p50Med, pasante: 50, real: true },
+                { tamano: p80Med, pasante: 80, real: true },
+                { tamano: p100Med, pasante: 99, real: true }
+            ];
+            
+            // Guardar parámetros ajustados para referencia
+            datosHistoricos.ajusteRR = {
+                Xc: mejorXc,
+                n: mejorN,
+                error: Math.sqrt(menorError / puntosAjuste.length)
+            };
+            
+            // Mostrar estadísticas
             document.getElementById('filtro-stats').innerHTML = 
                 `<strong>${datosFiltrados.length}</strong> registros | ` +
-                `P80: <strong style="color:#EAAA00;">${p80Med.toFixed(2)}"</strong> ±${std(p80Values).toFixed(2)}`;
+                `P80: <strong style="color:#EAAA00;">${p80Med.toFixed(2)}"</strong> ±${std(p80Values).toFixed(2)} | ` +
+                `<span style="color:#64CCC9;">n=${mejorN.toFixed(2)}</span>`;
             
             document.getElementById('historico-info').innerHTML = 
-                `✅ ${datosFiltrados.length} tronaduras | P80 medio: ${p80Med.toFixed(2)}"`;
+                `✅ ${datosFiltrados.length} tronaduras | P80: ${p80Med.toFixed(2)}" | Ajuste R-R: Xc=${mejorXc.toFixed(2)}", n=${mejorN.toFixed(2)}`;
             document.getElementById('historico-info').style.color = '#4AC5BB';
             
             drawGranuloChart();
