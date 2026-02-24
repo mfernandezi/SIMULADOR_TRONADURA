@@ -979,25 +979,41 @@
                         <span class="unit">pozos</span>
                     </div>
                     
-                    <!-- ═══════════ PRODUCCIÓN ═══════════ -->
-                    <div class="pozo-tipo-box" style="border-left: 3px solid #4AC5BB; padding-left: 6px; margin: 6px 0; background: rgba(16,185,129,0.1);">
+                    <!-- ═══════════ 1° PRECORTE (contra la caja) ═══════════ -->
+                    <div class="pozo-tipo-box" style="border-left: 3px solid #8AD4EB; padding-left: 6px; margin: 6px 0;">
                         <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px;">
-                            <span style="color: #4AC5BB; font-weight: bold; font-size: var(--font-md);">🟢 PRODUCCIÓN</span>
-                            <span style="font-size: var(--font-sm); color: #9aa0a6;">(Carga 100%)</span>
+                            <input type="checkbox" id="check-precorte" style="margin: 0;">
+                            <span style="color: #8AD4EB; font-weight: bold; font-size: var(--font-md);">🔵 PRECORTE</span>
+                            <span style="font-size: var(--font-sm); color: #9aa0a6;">(Contra la caja)</span>
                         </div>
-                        <div class="input-row">
-                            <label>Filas Producción:</label>
-                            <input type="number" id="input-filas-prod" value="3" min="1" max="10" step="1">
-                            <span class="unit">filas</span>
+                        <div id="precorte-options" style="display: none;">
+                            <div class="input-row">
+                                <label>Espaciamiento:</label>
+                                <input type="number" id="input-precorte-esp" value="1.2" step="0.1" min="0.5" max="3.0">
+                                <span class="unit">m</span>
+                            </div>
+                            <div class="input-row">
+                                <label>Diámetro:</label>
+                                <input type="number" id="input-precorte-diam" value="4.5" step="0.5" min="2" max="8">
+                                <span class="unit">pulg</span>
+                            </div>
+                            <div class="input-row">
+                                <label>Carga lineal:</label>
+                                <input type="number" id="input-precorte-carga" value="0.35" step="0.05" min="0.1" max="1.0">
+                                <span class="unit">kg/m</span>
+                            </div>
+                            <div style="font-size: var(--font-sm); color: #8AD4EB; margin-top: 3px; padding: 2px; background: rgba(6,182,212,0.1); border-radius: 2px;">
+                                ⏱️ El precorte detona ANTES que la producción
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- ═══════════ AMORTIGUADORES ═══════════ -->
+                    <!-- ═══════════ 2° AMORTIGUADORES (Buffer) ═══════════ -->
                     <div class="pozo-tipo-box" style="border-left: 3px solid #EAAA00; padding-left: 6px; margin: 6px 0;">
                         <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px;">
                             <input type="checkbox" id="check-amortiguadores" checked style="margin: 0;">
                             <span style="color: #EAAA00; font-weight: bold; font-size: var(--font-md);">🟡 AMORTIGUADORES</span>
-                            <span style="font-size: var(--font-sm); color: #9aa0a6;">(Transición)</span>
+                            <span style="font-size: var(--font-sm); color: #9aa0a6;">(Buffer / Transición)</span>
                         </div>
                         <div id="amortiguadores-options">
                             <div class="input-row">
@@ -1018,12 +1034,25 @@
                         </div>
                     </div>
                     
-                    <!-- ═══════════ BORDE ═══════════ -->
+                    <!-- ═══════════ 3° PRODUCCIÓN ═══════════ -->
+                    <div class="pozo-tipo-box" style="border-left: 3px solid #4AC5BB; padding-left: 6px; margin: 6px 0; background: rgba(16,185,129,0.1);">
+                        <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px;">
+                            <span style="color: #4AC5BB; font-weight: bold; font-size: var(--font-md);">🟢 PRODUCCIÓN</span>
+                            <span style="font-size: var(--font-sm); color: #9aa0a6;">(Carga 100%)</span>
+                        </div>
+                        <div class="input-row">
+                            <label>Filas Producción:</label>
+                            <input type="number" id="input-filas-prod" value="3" min="1" max="10" step="1">
+                            <span class="unit">filas</span>
+                        </div>
+                    </div>
+                    
+                    <!-- ═══════════ 4° BORDE (cara libre) ═══════════ -->
                     <div class="pozo-tipo-box" style="border-left: 3px solid #D22630; padding-left: 6px; margin: 6px 0;">
                         <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px;">
                             <input type="checkbox" id="check-borde" checked style="margin: 0;">
                             <span style="color: #D22630; font-weight: bold; font-size: var(--font-md);">🔴 BORDE</span>
-                            <span style="font-size: var(--font-sm); color: #9aa0a6;">(Última fila hacia talud)</span>
+                            <span style="font-size: var(--font-sm); color: #9aa0a6;">(Última fila hacia cara libre)</span>
                         </div>
                         <div id="borde-options">
                             <div class="input-row">
@@ -1040,35 +1069,6 @@
                                 <label>Factor Carga:</label>
                                 <input type="number" id="input-borde-carga" value="0.60" step="0.05" min="0.3" max="1.0">
                                 <span class="unit">×Q</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- ═══════════ PRECORTE ═══════════ -->
-                    <div class="pozo-tipo-box" style="border-left: 3px solid #8AD4EB; padding-left: 6px; margin: 6px 0;">
-                        <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px;">
-                            <input type="checkbox" id="check-precorte" style="margin: 0;">
-                            <span style="color: #8AD4EB; font-weight: bold; font-size: var(--font-md);">🔵 PRECORTE</span>
-                            <span style="font-size: var(--font-sm); color: #9aa0a6;">(Línea de corte)</span>
-                        </div>
-                        <div id="precorte-options" style="display: none;">
-                            <div class="input-row">
-                                <label>Espaciamiento:</label>
-                                <input type="number" id="input-precorte-esp" value="1.2" step="0.1" min="0.5" max="3.0">
-                                <span class="unit">m</span>
-                            </div>
-                            <div class="input-row">
-                                <label>Diámetro:</label>
-                                <input type="number" id="input-precorte-diam" value="4.5" step="0.5" min="2" max="8">
-                                <span class="unit">pulg</span>
-                            </div>
-                            <div class="input-row">
-                                <label>Carga lineal:</label>
-                                <input type="number" id="input-precorte-carga" value="0.35" step="0.05" min="0.1" max="1.0">
-                                <span class="unit">kg/m</span>
-                            </div>
-                            <div style="font-size: var(--font-sm); color: #8AD4EB; margin-top: 3px; padding: 2px; background: rgba(6,182,212,0.1); border-radius: 2px;">
-                                ⏱️ El precorte detona ANTES que la producción
                             </div>
                         </div>
                     </div>
@@ -1697,15 +1697,15 @@
                 <div class="theory-box" style="border-color: #8AD4EB;">
                     <h4 style="color: #8AD4EB;">🛡️ Pozos Especiales - Control de Talud</h4>
                     
-                    <p style="margin-bottom:4px;"><strong>Ubicación espacial (talud → cara libre):</strong></p>
+                    <p style="margin-bottom:4px;"><strong>Ubicación espacial (caja → cara libre):</strong></p>
                     <div style="display: flex; gap: 3px; margin: 4px 0; align-items: center; font-size: var(--font-sm);">
                         <span style="background: #8AD4EB; padding: 2px 4px; border-radius: 2px; color:#000;">Precorte</span>
-                        <span>→</span>
-                        <span style="background: #D22630; padding: 2px 4px; border-radius: 2px;">Borde</span>
                         <span>→</span>
                         <span style="background: #EAAA00; padding: 2px 4px; border-radius: 2px; color:#000;">Amortiguadores</span>
                         <span>→</span>
                         <span style="background: #4AC5BB; padding: 2px 4px; border-radius: 2px; color:#000;">Producción</span>
+                        <span>→</span>
+                        <span style="background: #D22630; padding: 2px 4px; border-radius: 2px;">Borde</span>
                     </div>
                     
                     <p style="margin-top:6px; margin-bottom:4px;"><strong>Orden de DETONACIÓN (MLP):</strong></p>
@@ -2319,29 +2319,30 @@
             if (!visual) return;
             
             let html = '';
+            html += `<div style="font-size: var(--font-sm); color: #9aa0a6; writing-mode: vertical-rl; transform: rotate(180deg); margin-right: 4px;">CAJA ←</div>`;
             
-            // Precorte (si está activo)
+            // 1° Precorte contra la caja (si está activo)
             if (params.precorteEnabled) {
                 html += `<div style="background: #8AD4EB; width: 6px; height: 30px; border-radius: 2px;" title="Precorte (${pozosEspecialesCalc.pozosPrecorte} pozos)"></div>`;
             }
             
-            // Borde
-            if (params.bordeEnabled) {
-                for (let i = 0; i < params.filasBorde; i++) {
-                    html += `<div style="background: #D22630; width: 10px; height: 30px; border-radius: 2px; margin-left: 2px;" title="Borde (${params.columnas} pozos)"></div>`;
-                }
-            }
-            
-            // Amortiguadores
+            // 2° Amortiguadores (Buffer)
             if (params.amortiguadoresEnabled) {
                 for (let i = 0; i < params.filasAmortiguadores; i++) {
                     html += `<div style="background: #EAAA00; width: 12px; height: 30px; border-radius: 2px; margin-left: 2px;" title="Amortiguadores (${params.columnas} pozos)"></div>`;
                 }
             }
             
-            // Producción
+            // 3° Producción
             for (let i = 0; i < params.filasProd; i++) {
                 html += `<div style="background: #4AC5BB; width: 14px; height: 30px; border-radius: 2px; margin-left: 2px;" title="Producción (${params.columnas} pozos)"></div>`;
+            }
+            
+            // 4° Borde (último, hacia la cara libre)
+            if (params.bordeEnabled) {
+                for (let i = 0; i < params.filasBorde; i++) {
+                    html += `<div style="background: #D22630; width: 10px; height: 30px; border-radius: 2px; margin-left: 2px;" title="Borde (${params.columnas} pozos)"></div>`;
+                }
             }
             
             html += `<div style="font-size: var(--font-sm); color: #9aa0a6; writing-mode: vertical-rl; transform: rotate(180deg); margin-left: 4px;">→ CARA LIBRE</div>`;
@@ -2867,13 +2868,15 @@
                     if (row === filaActual) return 'precorte';
                     filaActual++;
                 }
-                if (params.bordeEnabled) {
-                    if (row < filaActual + filasBorde) return 'borde';
-                    filaActual += filasBorde;
-                }
                 if (params.amortiguadoresEnabled) {
                     if (row < filaActual + filasAmortiguadores) return 'amortiguadores';
                     filaActual += filasAmortiguadores;
+                }
+                if (row < filaActual + filasProd) return 'produccion';
+                filaActual += filasProd;
+                if (params.bordeEnabled) {
+                    if (row < filaActual + filasBorde) return 'borde';
+                    filaActual += filasBorde;
                 }
                 return 'produccion';
             }
@@ -2893,10 +2896,9 @@
             for (let row = 0; row < totalRows; row++) {
                 const tipo = getTipoPozoWave(row);
                 if (tipo === 'produccion') {
-                    // Filas de producción relativas
                     let filaProdRelativa = row;
                     if (params.pozosEspeciales) {
-                        filaProdRelativa = row - filasPrecorte - filasBorde - filasAmortiguadores;
+                        filaProdRelativa = row - filasPrecorte - filasAmortiguadores;
                     }
                     for (let col = 0; col < totalCols; col++) {
                         const detTime = TIEMPO_INICIO_PROD + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * params.B;
@@ -2908,14 +2910,13 @@
             // Segunda pasada: asignar todos los tiempos
             // ORDEN MLP: 1° Precorte → 2° Amortiguadores → 3° Producción → 4° Borde
             
-            // Calcular tiempo máximo de amortiguadores para que producción inicie después
-            const TIEMPO_AMORTIGUADORES = TIEMPO_PRECORTE + 500; // 500ms después de precorte
+            const TIEMPO_AMORTIGUADORES = TIEMPO_PRECORTE + 500;
             let maxTiempoAmortiguadores = TIEMPO_AMORTIGUADORES;
             
             for (let row = 0; row < totalRows; row++) {
                 const tipo = getTipoPozoWave(row);
                 if (tipo === 'amortiguadores') {
-                    let filaAmortRelativa = row - filasPrecorte - filasBorde;
+                    let filaAmortRelativa = row - filasPrecorte;
                     for (let col = 0; col < totalCols; col++) {
                         const t = TIEMPO_AMORTIGUADORES + col * MS_ENTRE_POZOS_PROD + filaAmortRelativa * MS_BURDEN_AMORTIGUADORES * params.B;
                         maxTiempoAmortiguadores = Math.max(maxTiempoAmortiguadores, t);
@@ -2923,7 +2924,6 @@
                 }
             }
             
-            // Producción inicia después de amortiguadores
             const TIEMPO_REAL_PROD = filasAmortiguadores > 0 ? maxTiempoAmortiguadores + 200 : TIEMPO_INICIO_PROD;
             
             for (let row = 0; row < totalRows; row++) {
@@ -2933,26 +2933,22 @@
                     let detTime;
                     
                     if (tipo === 'precorte') {
-                        // 1° Precorte: 100ms, secuencia por columna
                         detTime = TIEMPO_PRECORTE + col * 31;
                     } else if (tipo === 'amortiguadores') {
-                        // 2° Amortiguadores: después de precorte (~500-600ms)
-                        let filaAmortRelativa = row - filasPrecorte - filasBorde;
+                        let filaAmortRelativa = row - filasPrecorte;
                         if (filaAmortRelativa < 0) filaAmortRelativa = 0;
                         detTime = TIEMPO_AMORTIGUADORES + col * MS_ENTRE_POZOS_PROD + filaAmortRelativa * MS_BURDEN_AMORTIGUADORES * params.B;
                     } else if (tipo === 'produccion') {
-                        // 3° Producción: después de amortiguadores
-                        let filaProdRelativa = row - filasPrecorte - filasBorde - filasAmortiguadores;
+                        let filaProdRelativa = row - filasPrecorte - filasAmortiguadores;
                         if (filaProdRelativa < 0) filaProdRelativa = 0;
                         detTime = TIEMPO_REAL_PROD + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * params.B;
                         maxTiempoProd = Math.max(maxTiempoProd, detTime);
                     } else if (tipo === 'borde') {
-                        // 4° Borde: al final, después de producción
-                        let filaBordeRelativa = row - filasPrecorte;
+                        let filaBordeRelativa = row - filasPrecorte - filasAmortiguadores - filasProd;
                         if (filaBordeRelativa < 0) filaBordeRelativa = 0;
                         detTime = maxTiempoProd + 200 + col * MS_ENTRE_POZOS_PROD + filaBordeRelativa * MS_BURDEN_BORDE * params.B;
                     } else {
-                        detTime = col * 30 + row * 52; // Fallback
+                        detTime = col * 30 + row * 52;
                     }
                     
                     maxTime = Math.max(maxTime, detTime);
@@ -3029,21 +3025,13 @@
                 
                 let filaActual = 0;
                 
-                // Precorte (fila 0 si está activo)
+                // 1° Precorte contra la caja (fila 0 si está activo)
                 if (params.precorteEnabled) {
                     if (row === filaActual) return { tipo: 'precorte', color: 0x8AD4EB, cargaFactor: 0.3 };
                     filaActual++;
                 }
                 
-                // Borde
-                if (params.bordeEnabled) {
-                    if (row < filaActual + params.filasBorde) {
-                        return { tipo: 'borde', color: 0xD22630, cargaFactor: params.bordeCargaFactor };
-                    }
-                    filaActual += params.filasBorde;
-                }
-                
-                // Amortiguadores
+                // 2° Amortiguadores (Buffer)
                 if (params.amortiguadoresEnabled) {
                     if (row < filaActual + params.filasAmortiguadores) {
                         return { tipo: 'amortiguadores', color: 0xEAAA00, cargaFactor: params.amortiguadoresCargaFactor };
@@ -3051,7 +3039,19 @@
                     filaActual += params.filasAmortiguadores;
                 }
                 
-                // Producción (resto)
+                // 3° Producción
+                if (row < filaActual + params.filasProd) {
+                    return { tipo: 'produccion', color: 0x4AC5BB, cargaFactor: 1.0 };
+                }
+                filaActual += params.filasProd;
+                
+                // 4° Borde (último, hacia la cara libre)
+                if (params.bordeEnabled) {
+                    if (row < filaActual + params.filasBorde) {
+                        return { tipo: 'borde', color: 0xD22630, cargaFactor: params.bordeCargaFactor };
+                    }
+                }
+                
                 return { tipo: 'produccion', color: 0x4AC5BB, cargaFactor: 1.0 };
             }
 
@@ -3076,7 +3076,7 @@
                 for (let row = 0; row < totalRows; row++) {
                     const tipo = getTipoPozo(row).tipo;
                     if (tipo === 'produccion') {
-                        let filaProdRelativa = row - filasPrecorte - filasBorde - filasAmortiguadores;
+                        let filaProdRelativa = row - filasPrecorte - filasAmortiguadores;
                         for (let col = 0; col < totalCols; col++) {
                             const t = TIEMPO_INICIO_PROD + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * B;
                             maxTiempoProd = Math.max(maxTiempoProd, t);
@@ -3091,35 +3091,30 @@
                 for (let col = 0; col < totalCols; col++) {
                     const x = col * S, z = row * B;
                     
-                    // Calcular detTime según tipo de pozo (estándar MLP)
                     let detTime;
                     if (tipoPozo.tipo === 'precorte') {
-                        // Precorte: 100ms, secuencia por columna
                         detTime = TIEMPO_PRECORTE + col * 31;
-                    } else if (tipoPozo.tipo === 'produccion') {
-                        // Producción: inicia en 5000ms, secuencia diagonal
-                        let filaProdRelativa = row;
-                        if (params.pozosEspeciales) {
-                            filaProdRelativa = row - filasPrecorte - filasBorde - filasAmortiguadores;
-                        }
-                        detTime = TIEMPO_INICIO_PROD + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * B;
                     } else if (tipoPozo.tipo === 'amortiguadores') {
-                        // Amortiguadores: después de producción
                         let filaAmortiguadoresRelativa = 0;
                         if (params.pozosEspeciales) {
-                            filaAmortiguadoresRelativa = row - filasPrecorte - filasBorde;
+                            filaAmortiguadoresRelativa = row - filasPrecorte;
                         }
                         detTime = maxTiempoProd + 100 + col * MS_ENTRE_POZOS_PROD + filaAmortiguadoresRelativa * MS_BURDEN_AMORTIGUADORES * B;
+                    } else if (tipoPozo.tipo === 'produccion') {
+                        let filaProdRelativa = row;
+                        if (params.pozosEspeciales) {
+                            filaProdRelativa = row - filasPrecorte - filasAmortiguadores;
+                        }
+                        detTime = TIEMPO_INICIO_PROD + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * B;
                     } else if (tipoPozo.tipo === 'borde') {
-                        // Borde: al final
                         let filaBordeRelativa = 0;
                         if (params.pozosEspeciales) {
-                            filaBordeRelativa = row - filasPrecorte;
+                            filaBordeRelativa = row - filasPrecorte - filasAmortiguadores - params.filasProd;
                         }
                         const tiempoBaseAmortiguadores = maxTiempoProd + 100 + filasAmortiguadores * MS_BURDEN_AMORTIGUADORES * B;
                         detTime = tiempoBaseAmortiguadores + 200 + col * MS_ENTRE_POZOS_PROD + filaBordeRelativa * MS_BURDEN_BORDE * B;
                     } else {
-                        detTime = col * 30 + row * 52; // Fallback
+                        detTime = col * 30 + row * 52;
                     }
 
                     const grp = new THREE.Group();
