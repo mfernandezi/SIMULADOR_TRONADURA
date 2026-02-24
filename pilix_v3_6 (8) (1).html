@@ -2901,51 +2901,46 @@
                 return 'produccion';
             }
             
-            // Secuencia MLP: Precorte → Amortiguadores → Producción → Borde
+            // Secuencia MLP: 1° Precorte → 2° Amortiguadores → 3° Producción → 4° Borde
+            // Orden espacial (talud→cara libre): Precorte → Amortiguadores → Producción → Borde
             const TIEMPO_PRECORTE = params.tiempoPrecorte;
             const TIEMPO_INICIO_PROD = params.tiempoProd;
-            const MS_ENTRE_POZOS_PROD = params.msEntrePozos;
+            const MS_ENTRE_POZOS = params.msEntrePozos;
             const MS_BURDEN_PROD = params.msBurdenProd;
-            const MS_BURDEN_AMORTIGUADORES = params.msBurdenAmortiguadores;
+            const MS_BURDEN_AMORT = params.msBurdenAmortiguadores;
             const MS_BURDEN_BORDE = params.msBurdenBorde;
             
-            // Primera pasada: calcular tiempo máximo de producción
-            let maxTiempoProd = TIEMPO_INICIO_PROD;
+            // Paso 1: Calcular tiempo máximo de amortiguadores
+            const TIEMPO_AMORT = TIEMPO_PRECORTE + 500;
+            let maxTiempoAmort = TIEMPO_AMORT;
             
             for (let row = 0; row < totalRows; row++) {
-                const tipo = getTipoPozoWave(row);
-                if (tipo === 'produccion') {
-                    let filaProdRelativa = row;
-                    if (params.pozosEspeciales) {
-                        filaProdRelativa = row - filasPrecorte - filasAmortiguadores;
-                    }
+                if (getTipoPozoWave(row) === 'amortiguadores') {
+                    const filaRel = Math.max(0, row - filasPrecorte);
                     for (let col = 0; col < totalCols; col++) {
-                        const detTime = TIEMPO_INICIO_PROD + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * params.B;
-                        maxTiempoProd = Math.max(maxTiempoProd, detTime);
+                        const t = TIEMPO_AMORT + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_AMORT * params.B;
+                        maxTiempoAmort = Math.max(maxTiempoAmort, t);
                     }
                 }
             }
             
-            // Segunda pasada: asignar todos los tiempos
-            // ORDEN MLP: 1° Precorte → 2° Amortiguadores → 3° Producción → 4° Borde
+            // Paso 2: Producción inicia después de amortiguadores (o directo si no hay)
+            const TIEMPO_PROD = filasAmortiguadores > 0 ? maxTiempoAmort + 200 : TIEMPO_INICIO_PROD;
             
-            // Calcular tiempo máximo de amortiguadores para que producción inicie después
-            const TIEMPO_AMORTIGUADORES = TIEMPO_PRECORTE + 500; // 500ms después de precorte
-            let maxTiempoAmortiguadores = TIEMPO_AMORTIGUADORES;
+            // Paso 3: Calcular tiempo máximo de producción (necesario para borde)
+            let maxTiempoProd = TIEMPO_PROD;
             
             for (let row = 0; row < totalRows; row++) {
-                const tipo = getTipoPozoWave(row);
-                if (tipo === 'amortiguadores') {
-                    let filaAmortRelativa = row - filasPrecorte;
+                if (getTipoPozoWave(row) === 'produccion') {
+                    const filaRel = Math.max(0, row - filasPrecorte - filasAmortiguadores);
                     for (let col = 0; col < totalCols; col++) {
-                        const t = TIEMPO_AMORTIGUADORES + col * MS_ENTRE_POZOS_PROD + filaAmortRelativa * MS_BURDEN_AMORTIGUADORES * params.B;
-                        maxTiempoAmortiguadores = Math.max(maxTiempoAmortiguadores, t);
+                        const t = TIEMPO_PROD + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_PROD * params.B;
+                        maxTiempoProd = Math.max(maxTiempoProd, t);
                     }
                 }
             }
             
-            const TIEMPO_REAL_PROD = filasAmortiguadores > 0 ? maxTiempoAmortiguadores + 200 : TIEMPO_INICIO_PROD;
-            
+            // Paso 4: Asignar tiempos a cada pozo
             for (let row = 0; row < totalRows; row++) {
                 const tipo = getTipoPozoWave(row);
                 
@@ -2955,18 +2950,14 @@
                     if (tipo === 'precorte') {
                         detTime = TIEMPO_PRECORTE + col * 31;
                     } else if (tipo === 'amortiguadores') {
-                        let filaAmortRelativa = row - filasPrecorte;
-                        if (filaAmortRelativa < 0) filaAmortRelativa = 0;
-                        detTime = TIEMPO_AMORTIGUADORES + col * MS_ENTRE_POZOS_PROD + filaAmortRelativa * MS_BURDEN_AMORTIGUADORES * params.B;
+                        const filaRel = Math.max(0, row - filasPrecorte);
+                        detTime = TIEMPO_AMORT + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_AMORT * params.B;
                     } else if (tipo === 'produccion') {
-                        let filaProdRelativa = row - filasPrecorte - filasAmortiguadores;
-                        if (filaProdRelativa < 0) filaProdRelativa = 0;
-                        detTime = TIEMPO_REAL_PROD + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * params.B;
-                        maxTiempoProd = Math.max(maxTiempoProd, detTime);
+                        const filaRel = Math.max(0, row - filasPrecorte - filasAmortiguadores);
+                        detTime = TIEMPO_PROD + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_PROD * params.B;
                     } else if (tipo === 'borde') {
-                        let filaBordeRelativa = row - filasPrecorte - filasAmortiguadores - filasProd;
-                        if (filaBordeRelativa < 0) filaBordeRelativa = 0;
-                        detTime = maxTiempoProd + 200 + col * MS_ENTRE_POZOS_PROD + filaBordeRelativa * MS_BURDEN_BORDE * params.B;
+                        const filaRel = Math.max(0, row - filasPrecorte - filasAmortiguadores - filasProd);
+                        detTime = maxTiempoProd + 200 + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_BORDE * params.B;
                     } else {
                         detTime = col * 30 + row * 52;
                     }
@@ -3083,32 +3074,33 @@
             let filasBorde = params.bordeEnabled ? params.filasBorde : 0;
             let filasAmortiguadores = params.amortiguadoresEnabled ? params.filasAmortiguadores : 0;
             
-            // Orden espacial: Precorte → Amortiguadores → (Borde) → Producción
-            // Secuencia detonación: Precorte → Amortiguadores → Producción → Borde
-            const TIEMPO_AMORTIGUADORES_3D = TIEMPO_PRECORTE + 500;
-            let maxTiempoAmort3D = TIEMPO_AMORTIGUADORES_3D;
+            // Secuencia MLP: 1° Precorte → 2° Amortiguadores → 3° Producción → 4° Borde
+            // Orden espacial (talud→cara libre): Precorte → Amortiguadores → Producción → Borde
+            const MS_ENTRE_POZOS = params.msEntrePozos;
+            const MS_BURDEN_AMORT = params.msBurdenAmortiguadores;
+            
+            const TIEMPO_AMORT_3D = TIEMPO_PRECORTE + 500;
+            let maxTiempoAmort3D = TIEMPO_AMORT_3D;
             if (params.pozosEspeciales && filasAmortiguadores > 0) {
                 for (let row = 0; row < totalRows; row++) {
-                    const tipo = getTipoPozo(row).tipo;
-                    if (tipo === 'amortiguadores') {
-                        let filaAmortRel = row - filasPrecorte;
+                    if (getTipoPozo(row).tipo === 'amortiguadores') {
+                        const filaRel = Math.max(0, row - filasPrecorte);
                         for (let col = 0; col < totalCols; col++) {
-                            const t = TIEMPO_AMORTIGUADORES_3D + col * MS_ENTRE_POZOS_PROD + filaAmortRel * MS_BURDEN_AMORTIGUADORES * B;
+                            const t = TIEMPO_AMORT_3D + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_AMORT * B;
                             maxTiempoAmort3D = Math.max(maxTiempoAmort3D, t);
                         }
                     }
                 }
             }
-            const TIEMPO_REAL_PROD_3D = filasAmortiguadores > 0 ? maxTiempoAmort3D + 200 : TIEMPO_INICIO_PROD;
+            const TIEMPO_PROD_3D = filasAmortiguadores > 0 ? maxTiempoAmort3D + 200 : TIEMPO_INICIO_PROD;
             
-            let maxTiempoProd = TIEMPO_REAL_PROD_3D;
+            let maxTiempoProd = TIEMPO_PROD_3D;
             if (params.pozosEspeciales) {
                 for (let row = 0; row < totalRows; row++) {
-                    const tipo = getTipoPozo(row).tipo;
-                    if (tipo === 'produccion') {
-                        let filaProdRelativa = row - filasPrecorte - filasAmortiguadores;
+                    if (getTipoPozo(row).tipo === 'produccion') {
+                        const filaRel = Math.max(0, row - filasPrecorte - filasAmortiguadores);
                         for (let col = 0; col < totalCols; col++) {
-                            const t = TIEMPO_REAL_PROD_3D + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * B;
+                            const t = TIEMPO_PROD_3D + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_PROD * B;
                             maxTiempoProd = Math.max(maxTiempoProd, t);
                         }
                     }
@@ -3125,23 +3117,14 @@
                     if (tipoPozo.tipo === 'precorte') {
                         detTime = TIEMPO_PRECORTE + col * 31;
                     } else if (tipoPozo.tipo === 'amortiguadores') {
-                        let filaAmortRel = 0;
-                        if (params.pozosEspeciales) {
-                            filaAmortRel = row - filasPrecorte;
-                        }
-                        detTime = TIEMPO_AMORTIGUADORES_3D + col * MS_ENTRE_POZOS_PROD + filaAmortRel * MS_BURDEN_AMORTIGUADORES * B;
+                        const filaRel = Math.max(0, row - filasPrecorte);
+                        detTime = TIEMPO_AMORT_3D + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_AMORT * B;
                     } else if (tipoPozo.tipo === 'produccion') {
-                        let filaProdRelativa = row;
-                        if (params.pozosEspeciales) {
-                            filaProdRelativa = row - filasPrecorte - filasAmortiguadores;
-                        }
-                        detTime = TIEMPO_REAL_PROD_3D + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * B;
+                        const filaRel = Math.max(0, row - filasPrecorte - filasAmortiguadores);
+                        detTime = TIEMPO_PROD_3D + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_PROD * B;
                     } else if (tipoPozo.tipo === 'borde') {
-                        let filaBordeRelativa = 0;
-                        if (params.pozosEspeciales) {
-                            filaBordeRelativa = row - filasPrecorte - filasAmortiguadores - params.filasProd;
-                        }
-                        detTime = maxTiempoProd + 200 + col * MS_ENTRE_POZOS_PROD + filaBordeRelativa * MS_BURDEN_BORDE * B;
+                        const filaRel = Math.max(0, row - filasPrecorte - filasAmortiguadores - params.filasProd);
+                        detTime = maxTiempoProd + 200 + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_BORDE * B;
                     } else {
                         detTime = col * 30 + row * 52;
                     }
