@@ -2878,8 +2878,7 @@
                 return 'produccion';
             }
             
-            // Calcular tiempos base para cada tipo según MLP (valores configurables)
-            // Orden de detonación: Precorte -> Producción -> Amortiguadores -> Borde
+            // Secuencia MLP: Precorte → Amortiguadores → Producción → Borde
             const TIEMPO_PRECORTE = params.tiempoPrecorte;
             const TIEMPO_INICIO_PROD = params.tiempoProd;
             const MS_ENTRE_POZOS_PROD = params.msEntrePozos;
@@ -3058,7 +3057,6 @@
 
             let id = 1;
             
-            // Calcular tiempos base para cada tipo según MLP (valores configurables)
             const TIEMPO_PRECORTE = params.tiempoPrecorte;
             const TIEMPO_INICIO_PROD = params.tiempoProd;
             const MS_ENTRE_POZOS_PROD = params.msEntrePozos;
@@ -3066,20 +3064,35 @@
             const MS_BURDEN_AMORTIGUADORES = params.msBurdenAmortiguadores;
             const MS_BURDEN_BORDE = params.msBurdenBorde;
             
-            // Calcular filas por tipo
             let filasPrecorte = params.precorteEnabled ? 1 : 0;
             let filasBorde = params.bordeEnabled ? params.filasBorde : 0;
             let filasAmortiguadores = params.amortiguadoresEnabled ? params.filasAmortiguadores : 0;
             
-            // Calcular tiempo máximo de producción
-            let maxTiempoProd = TIEMPO_INICIO_PROD;
+            // Secuencia MLP: Precorte → Amortiguadores → Producción → Borde
+            const TIEMPO_AMORTIGUADORES_3D = TIEMPO_PRECORTE + 500;
+            let maxTiempoAmort3D = TIEMPO_AMORTIGUADORES_3D;
+            if (params.pozosEspeciales && filasAmortiguadores > 0) {
+                for (let row = 0; row < totalRows; row++) {
+                    const tipo = getTipoPozo(row).tipo;
+                    if (tipo === 'amortiguadores') {
+                        let filaAmortRel = row - filasPrecorte - filasBorde;
+                        for (let col = 0; col < totalCols; col++) {
+                            const t = TIEMPO_AMORTIGUADORES_3D + col * MS_ENTRE_POZOS_PROD + filaAmortRel * MS_BURDEN_AMORTIGUADORES * B;
+                            maxTiempoAmort3D = Math.max(maxTiempoAmort3D, t);
+                        }
+                    }
+                }
+            }
+            const TIEMPO_REAL_PROD_3D = filasAmortiguadores > 0 ? maxTiempoAmort3D + 200 : TIEMPO_INICIO_PROD;
+            
+            let maxTiempoProd = TIEMPO_REAL_PROD_3D;
             if (params.pozosEspeciales) {
                 for (let row = 0; row < totalRows; row++) {
                     const tipo = getTipoPozo(row).tipo;
                     if (tipo === 'produccion') {
                         let filaProdRelativa = row - filasPrecorte - filasBorde - filasAmortiguadores;
                         for (let col = 0; col < totalCols; col++) {
-                            const t = TIEMPO_INICIO_PROD + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * B;
+                            const t = TIEMPO_REAL_PROD_3D + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * B;
                             maxTiempoProd = Math.max(maxTiempoProd, t);
                         }
                     }
@@ -3092,35 +3105,29 @@
                 for (let col = 0; col < totalCols; col++) {
                     const x = col * S, z = row * B;
                     
-                    // Calcular detTime según tipo de pozo (estándar MLP)
                     let detTime;
                     if (tipoPozo.tipo === 'precorte') {
-                        // Precorte: 100ms, secuencia por columna
                         detTime = TIEMPO_PRECORTE + col * 31;
+                    } else if (tipoPozo.tipo === 'amortiguadores') {
+                        let filaAmortRel = 0;
+                        if (params.pozosEspeciales) {
+                            filaAmortRel = row - filasPrecorte - filasBorde;
+                        }
+                        detTime = TIEMPO_AMORTIGUADORES_3D + col * MS_ENTRE_POZOS_PROD + filaAmortRel * MS_BURDEN_AMORTIGUADORES * B;
                     } else if (tipoPozo.tipo === 'produccion') {
-                        // Producción: inicia en 5000ms, secuencia diagonal
                         let filaProdRelativa = row;
                         if (params.pozosEspeciales) {
                             filaProdRelativa = row - filasPrecorte - filasBorde - filasAmortiguadores;
                         }
-                        detTime = TIEMPO_INICIO_PROD + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * B;
-                    } else if (tipoPozo.tipo === 'amortiguadores') {
-                        // Amortiguadores: después de producción
-                        let filaAmortiguadoresRelativa = 0;
-                        if (params.pozosEspeciales) {
-                            filaAmortiguadoresRelativa = row - filasPrecorte - filasBorde;
-                        }
-                        detTime = maxTiempoProd + 100 + col * MS_ENTRE_POZOS_PROD + filaAmortiguadoresRelativa * MS_BURDEN_AMORTIGUADORES * B;
+                        detTime = TIEMPO_REAL_PROD_3D + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * B;
                     } else if (tipoPozo.tipo === 'borde') {
-                        // Borde: al final
                         let filaBordeRelativa = 0;
                         if (params.pozosEspeciales) {
                             filaBordeRelativa = row - filasPrecorte;
                         }
-                        const tiempoBaseAmortiguadores = maxTiempoProd + 100 + filasAmortiguadores * MS_BURDEN_AMORTIGUADORES * B;
-                        detTime = tiempoBaseAmortiguadores + 200 + col * MS_ENTRE_POZOS_PROD + filaBordeRelativa * MS_BURDEN_BORDE * B;
+                        detTime = maxTiempoProd + 200 + col * MS_ENTRE_POZOS_PROD + filaBordeRelativa * MS_BURDEN_BORDE * B;
                     } else {
-                        detTime = col * 30 + row * 52; // Fallback
+                        detTime = col * 30 + row * 52;
                     }
 
                     const grp = new THREE.Group();
