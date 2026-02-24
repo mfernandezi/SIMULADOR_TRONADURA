@@ -92,7 +92,7 @@
         
         .container {
             display: grid;
-            grid-template-columns: 235px 1fr 310px;
+            grid-template-columns: 260px 1fr 310px;
             gap: 4px;
             padding: 4px;
             height: calc(100vh - 30px);
@@ -109,36 +109,49 @@
         
         .panel-header {
             background: linear-gradient(135deg, var(--bg-card), var(--bg-panel));
-            padding: 4px 8px;
-            font-weight: 600;
-            font-size: var(--font-md);
+            padding: 5px 10px;
+            font-weight: 700;
+            font-size: var(--font-lg);
             border-bottom: 1px solid var(--border);
+            letter-spacing: 0.3px;
         }
         
         .panel-content {
-            padding: 5px;
+            padding: 6px;
             overflow-y: auto;
             flex: 1;
         }
         
-        .section { margin-bottom: 6px; }
+        .panel-content::-webkit-scrollbar { width: 4px; }
+        .panel-content::-webkit-scrollbar-track { background: var(--bg-dark); }
+        .panel-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+        .panel-content::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
+        
+        .section {
+            margin-bottom: 8px;
+            background: rgba(0,0,0,0.12);
+            border-radius: 5px;
+            padding: 6px 7px;
+            border: 1px solid rgba(45,74,82,0.4);
+        }
         
         .section-title {
             color: var(--accent-cyan);
             font-size: var(--font-sm);
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
-            margin-bottom: 3px;
-            padding-bottom: 2px;
+            margin-bottom: 5px;
+            padding-bottom: 3px;
             border-bottom: 1px solid var(--border);
+            letter-spacing: 0.4px;
         }
         
         .input-row {
             display: grid;
-            grid-template-columns: 1fr 42px 22px;
+            grid-template-columns: 1fr 52px 24px;
             align-items: center;
-            margin-bottom: 2px;
-            gap: 2px;
+            margin-bottom: 3px;
+            gap: 3px;
         }
         
         .input-row label { font-size: var(--font-sm); color: var(--text-secondary); }
@@ -146,126 +159,133 @@
         .input-row input, .input-row select {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 2px;
-            padding: 2px 3px;
+            border-radius: 3px;
+            padding: 3px 4px;
             color: var(--text-primary);
             font-family: 'JetBrains Mono', monospace;
             font-size: var(--font-sm);
             text-align: right;
+            transition: border-color 0.15s, box-shadow 0.15s;
         }
         
-        .input-row input:focus { outline: none; border-color: var(--accent-cyan); }
-        .input-row .unit { font-size: var(--font-xs); color: var(--text-muted); }
-        .input-row.highlight input { background: rgba(255, 107, 53, 0.1); border-color: var(--accent-orange); }
+        .input-row input:focus { outline: none; border-color: var(--accent-cyan); box-shadow: 0 0 0 1px rgba(100,204,201,0.2); }
+        .input-row .unit { font-size: var(--font-xs); color: var(--text-muted); text-align: left; }
+        .input-row.highlight input { background: rgba(255, 107, 53, 0.12); border-color: var(--accent-orange); }
+        .input-row.highlight input:focus { border-color: var(--accent-orange); box-shadow: 0 0 0 1px rgba(254,150,102,0.25); }
         
         .explosive-selector {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 3px;
-            padding: 3px;
-            margin-bottom: 3px;
+            border-radius: 4px;
+            padding: 5px;
+            margin-bottom: 4px;
         }
         
         .explosive-selector select {
             width: 100%;
             background: var(--bg-panel);
             border: 1px solid var(--border);
-            border-radius: 2px;
-            padding: 2px;
+            border-radius: 3px;
+            padding: 3px 4px;
             color: var(--text-primary);
             font-size: var(--font-sm);
+            cursor: pointer;
         }
         
         .explosive-props {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 2px;
-            margin-top: 2px;
+            gap: 3px;
+            margin-top: 4px;
         }
         
         .explosive-prop {
             background: var(--bg-panel);
-            padding: 2px;
-            border-radius: 2px;
+            padding: 3px 2px;
+            border-radius: 3px;
             text-align: center;
+            border: 1px solid rgba(45,74,82,0.3);
         }
         
-        .explosive-prop .label { font-size: var(--font-xs); color: var(--text-muted); }
-        .explosive-prop .value { font-size: var(--font-sm); font-weight: 600; color: var(--accent-yellow); }
+        .explosive-prop .label { font-size: var(--font-xs); color: var(--text-muted); margin-bottom: 1px; }
+        .explosive-prop .value { font-size: var(--font-sm); font-weight: 700; color: var(--accent-yellow); }
         
         .calc-highlight {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.1));
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(0, 255, 136, 0.08));
             border: 1px solid var(--accent-cyan);
-            border-radius: 3px;
-            padding: 3px;
-            margin: 3px 0;
+            border-radius: 5px;
+            padding: 6px;
+            margin: 6px 0;
             text-align: center;
         }
         
-        .calc-highlight .calc-title { font-size: var(--font-xs); color: var(--text-muted); }
-        .calc-highlight .calc-value { font-size: 11px; font-weight: 700; color: var(--accent-cyan); }
+        .calc-highlight .calc-title { font-size: var(--font-xs); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .calc-highlight .calc-value { font-size: 14px; font-weight: 700; color: var(--accent-cyan); }
         .calc-highlight .calc-unit { font-size: var(--font-sm); color: var(--text-secondary); }
         
-        .calc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
         
         .calc-box {
             background: var(--bg-card);
-            border-radius: 2px;
-            padding: 2px;
+            border-radius: 3px;
+            padding: 4px 2px;
             text-align: center;
             border: 1px solid var(--border);
         }
         
-        .calc-box .label { font-size: var(--font-xs); color: var(--text-muted); }
+        .calc-box .label { font-size: var(--font-xs); color: var(--text-muted); margin-bottom: 1px; }
         .calc-box .value { font-size: var(--font-sm); font-weight: 600; color: var(--text-primary); }
         
         .btn {
-            padding: 3px 5px;
+            padding: 4px 8px;
             border: none;
-            border-radius: 3px;
+            border-radius: 4px;
             font-size: var(--font-sm);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
         
-        .btn:hover { transform: translateY(-1px); }
+        .btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
+        .btn:active { transform: translateY(0); }
         .btn-primary { background: linear-gradient(135deg, var(--accent-orange), #ff8c5a); color: #000; }
         .btn-success { background: linear-gradient(135deg, var(--success), #34d399); color: #000; }
         .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
         .btn-info { background: linear-gradient(135deg, var(--accent-cyan), #38bdf8); color: #000; }
         .btn-purple { background: linear-gradient(135deg, var(--accent-purple), #c084fc); color: #fff; }
         
-        .btn-group { display: flex; gap: 2px; margin-top: 3px; flex-wrap: wrap; }
+        .btn-group { display: flex; gap: 3px; margin-top: 5px; flex-wrap: wrap; }
         
         .checkbox-container {
             display: flex;
             align-items: center;
-            gap: 3px;
+            gap: 6px;
             background: var(--bg-card);
-            padding: 2px 4px;
-            border-radius: 2px;
+            padding: 5px 8px;
+            border-radius: 4px;
             border: 1px solid var(--border);
-            margin-bottom: 3px;
+            margin-bottom: 5px;
             cursor: pointer;
             font-size: var(--font-sm);
+            font-weight: 600;
             transition: all 0.2s;
         }
         
-        .checkbox-container:hover { border-color: var(--accent-purple); }
+        .checkbox-container:hover { border-color: var(--accent-purple); background: rgba(124, 58, 237, 0.08); }
         .checkbox-container.active { 
-            background: rgba(124, 58, 237, 0.15); 
+            background: rgba(124, 58, 237, 0.18); 
             border-color: var(--accent-purple);
+            box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.2);
         }
         
-        .checkbox-container input { width: 9px; height: 9px; pointer-events: none; }
+        .checkbox-container input { width: 12px; height: 12px; pointer-events: none; accent-color: var(--accent-purple); }
         
         /* Panel de Doble Taco */
         .doble-taco-config {
             background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(168, 85, 247, 0.05));
             border: 1px solid var(--accent-purple);
-            border-radius: 3px;
-            padding: 4px;
+            border-radius: 5px;
+            padding: 6px 7px;
             margin: 4px 0;
             display: none;
         }
@@ -286,8 +306,8 @@
         .pozos-especiales-config {
             background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(239, 68, 68, 0.05));
             border: 1px solid #8AD4EB;
-            border-radius: 3px;
-            padding: 4px;
+            border-radius: 5px;
+            padding: 6px 7px;
             margin: 4px 0;
         }
         
@@ -298,7 +318,8 @@
         
         .pozo-tipo-box {
             background: rgba(0, 0, 0, 0.2);
-            border-radius: 3px;
+            border-radius: 4px;
+            padding: 5px;
             padding: 4px;
         }
         
@@ -758,19 +779,18 @@
                         <span class="unit">%</span>
                     </div>
                     
-                    <!-- Lilly Calculado (parámetros estimados internamente) -->
-                    <div style="background:rgba(168,85,247,0.1);border:1px solid #A66999;border-radius:3px;padding:4px;margin-top:4px;">
-                        <div style="font-size: var(--font-sm);color:#9aa0a6;text-align:center;margin-bottom:3px;">Estimación automática desde UCS y RQD</div>
-                        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;text-align:center;">
-                            <div><span style="font-size: var(--font-xs);color:#9aa0a6;">RMD</span><br><span id="calc-RMD" style="font-size: var(--font-sm);color:#A66999;font-weight:600;">20</span></div>
-                            <div><span style="font-size: var(--font-xs);color:#9aa0a6;">JPS</span><br><span id="calc-JPS" style="font-size: var(--font-sm);color:#A66999;font-weight:600;">20</span></div>
-                            <div><span style="font-size: var(--font-xs);color:#9aa0a6;">JPO</span><br><span id="calc-JPO" style="font-size: var(--font-sm);color:#A66999;font-weight:600;">20</span></div>
-                            <div><span style="font-size: var(--font-xs);color:#9aa0a6;">SGI</span><br><span id="calc-SGI" style="font-size: var(--font-sm);color:#A66999;font-weight:600;">16</span></div>
+                    <div style="background:rgba(168,85,247,0.08);border:1px solid rgba(166,105,153,0.5);border-radius:4px;padding:6px;margin-top:6px;">
+                        <div style="font-size: var(--font-xs);color:#9aa0a6;text-align:center;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.3px;">Estimación desde UCS y RQD</div>
+                        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px;text-align:center;">
+                            <div style="background:rgba(0,0,0,0.2);border-radius:3px;padding:2px 0;"><span style="font-size:7px;color:#9aa0a6;display:block;">RMD</span><span id="calc-RMD" style="font-size:var(--font-sm);color:#A66999;font-weight:700;">20</span></div>
+                            <div style="background:rgba(0,0,0,0.2);border-radius:3px;padding:2px 0;"><span style="font-size:7px;color:#9aa0a6;display:block;">JPS</span><span id="calc-JPS" style="font-size:var(--font-sm);color:#A66999;font-weight:700;">20</span></div>
+                            <div style="background:rgba(0,0,0,0.2);border-radius:3px;padding:2px 0;"><span style="font-size:7px;color:#9aa0a6;display:block;">JPO</span><span id="calc-JPO" style="font-size:var(--font-sm);color:#A66999;font-weight:700;">20</span></div>
+                            <div style="background:rgba(0,0,0,0.2);border-radius:3px;padding:2px 0;"><span style="font-size:7px;color:#9aa0a6;display:block;">SGI</span><span id="calc-SGI" style="font-size:var(--font-sm);color:#A66999;font-weight:700;">16</span></div>
                         </div>
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;text-align:center;margin-top:3px;">
-                            <div><span style="font-size: var(--font-xs);color:#9aa0a6;">HP</span><br><span id="calc-HP" style="font-size: var(--font-sm);color:#A66999;font-weight:600;">6.0</span></div>
-                            <div><span style="font-size: var(--font-xs);color:#9aa0a6;">BI</span><br><span id="calc-BI" style="font-size: var(--font-sm);color:#A66999;font-weight:600;">41</span></div>
-                            <div><span style="font-size: var(--font-xs);color:#9aa0a6;">A (Lilly)</span><br><span id="calc-A-lilly" style="font-size: var(--font-sm);color:#64CCC9;font-weight:700;">4.9</span></div>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;text-align:center;margin-top:4px;">
+                            <div style="background:rgba(0,0,0,0.2);border-radius:3px;padding:2px 0;"><span style="font-size:7px;color:#9aa0a6;display:block;">HP</span><span id="calc-HP" style="font-size:var(--font-sm);color:#A66999;font-weight:700;">6.0</span></div>
+                            <div style="background:rgba(0,0,0,0.2);border-radius:3px;padding:2px 0;"><span style="font-size:7px;color:#9aa0a6;display:block;">BI</span><span id="calc-BI" style="font-size:var(--font-sm);color:#A66999;font-weight:700;">41</span></div>
+                            <div style="background:rgba(100,204,201,0.1);border:1px solid rgba(100,204,201,0.3);border-radius:3px;padding:2px 0;"><span style="font-size:7px;color:#64CCC9;display:block;">A (Lilly)</span><span id="calc-A-lilly" style="font-size:var(--font-md);color:#64CCC9;font-weight:700;">4.9</span></div>
                         </div>
                     </div>
                     
@@ -784,28 +804,27 @@
                     </div>
                 </div>
                 
-                <!-- Factores Kx/Kn -->
-                <div class="section" style="background:rgba(255,107,53,0.08);border:1px solid var(--accent-orange);border-radius:3px;padding:4px;margin-bottom:4px;">
-                    <div class="section-title" style="color:var(--accent-orange);border-bottom-color:var(--accent-orange);">🎯 Factores Kx/Kn (Calibración)</div>
-                    <div style="font-size: var(--font-sm);color:#9aa0a6;margin-bottom:4px;padding:2px;background:rgba(0,0,0,0.2);border-radius:2px;">
-                        ⚠️ Kx/Kn se COMBINAN con A (Lilly), no son excluyentes
+                <div class="section" style="background:rgba(255,107,53,0.06);border-color:rgba(254,150,102,0.4);">
+                    <div class="section-title" style="color:var(--accent-orange);border-bottom-color:rgba(254,150,102,0.4);">🎯 Calibración Kx / Kn</div>
+                    <div style="font-size:var(--font-xs);color:#9aa0a6;margin-bottom:5px;padding:3px 4px;background:rgba(0,0,0,0.2);border-radius:3px;text-align:center;">
+                        Kx/Kn se combinan con A (Lilly)
                     </div>
-                    <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px;">
-                        <label style="font-size: var(--font-sm);color:#9aa0a6;width:20px;">Kx</label>
-                        <input type="range" id="input-Kx" min="0.1" max="2" step="0.01" value="1.0" style="flex:1;height:4px;">
-                        <span id="val-Kx" style="font-size: var(--font-md);font-weight:600;color:var(--accent-orange);min-width:30px;text-align:right;">1.00</span>
+                    <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
+                        <label style="font-size:var(--font-sm);color:#FE9666;width:22px;font-weight:700;">Kx</label>
+                        <input type="range" id="input-Kx" min="0.1" max="2" step="0.01" value="1.0" style="flex:1;height:5px;accent-color:var(--accent-orange);">
+                        <span id="val-Kx" style="font-size:var(--font-md);font-weight:700;color:var(--accent-orange);min-width:32px;text-align:right;">1.00</span>
                     </div>
-                    <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px;">
-                        <label style="font-size: var(--font-sm);color:#9aa0a6;width:20px;">Kn</label>
-                        <input type="range" id="input-Kn" min="0.5" max="1.5" step="0.01" value="1.0" style="flex:1;height:4px;">
-                        <span id="val-Kn" style="font-size: var(--font-md);font-weight:600;color:var(--accent-orange);min-width:30px;text-align:right;">1.00</span>
+                    <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;">
+                        <label style="font-size:var(--font-sm);color:#FE9666;width:22px;font-weight:700;">Kn</label>
+                        <input type="range" id="input-Kn" min="0.5" max="1.5" step="0.01" value="1.0" style="flex:1;height:5px;accent-color:var(--accent-orange);">
+                        <span id="val-Kn" style="font-size:var(--font-md);font-weight:700;color:var(--accent-orange);min-width:32px;text-align:right;">1.00</span>
                     </div>
-                    <button class="btn btn-primary" onclick="estimateKxKn()" style="width:100%;font-size: var(--font-sm);">📊 Estimar Kx/Kn desde UCS+RQD</button>
-                    <div style="font-size: var(--font-xs);color:#9aa0a6;margin-top:3px;text-align:center;">
-                        <span style="color:#4AC5BB;">Kx&lt;1 → más fino</span> | 
-                        <span style="color:#D22630;">Kx&gt;1 → más grueso</span>
+                    <button class="btn btn-primary" onclick="estimateKxKn()" style="width:100%;font-size:var(--font-sm);padding:4px;">📊 Estimar Kx/Kn desde UCS+RQD</button>
+                    <div style="display:flex;justify-content:center;gap:10px;font-size:var(--font-xs);margin-top:4px;">
+                        <span style="color:#4AC5BB;">Kx&lt;1 → fino</span>
+                        <span style="color:#D22630;">Kx&gt;1 → grueso</span>
                     </div>
-                    <div style="font-size: var(--font-xs);color:#EAAA00;margin-top:2px;text-align:center;">Ref UGT-4 Chuquicamata: Kx=0.31, Kn=1.04</div>
+                    <div style="font-size:var(--font-xs);color:#EAAA00;margin-top:3px;text-align:center;opacity:0.8;">Ref UGT-4 Chuquicamata: Kx=0.31, Kn=1.04</div>
                 </div>
 
                 <div class="section">
@@ -875,13 +894,13 @@
                 </div>
 
                 <div class="section">
-                    <div class="section-title">📐 Geometría</div>
+                    <div class="section-title">📐 Geometría de Perforación</div>
                     <div class="input-row"><label>Burden (B):</label><input type="number" id="input-B" value="6.5" step="0.5"><span class="unit">m</span></div>
                     <div class="input-row"><label>Espaciam. (S):</label><input type="number" id="input-S" value="7.5" step="0.5"><span class="unit">m</span></div>
                     <div class="input-row"><label>Taco Sup. (T):</label><input type="number" id="input-T" value="5.25" step="0.25"><span class="unit">m</span></div>
-                    <div class="input-row"><label>Altura (H):</label><input type="number" id="input-H" value="15" step="1"><span class="unit">m</span></div>
+                    <div class="input-row"><label>Altura banco (H):</label><input type="number" id="input-H" value="15" step="1"><span class="unit">m</span></div>
                     <div class="input-row"><label>Pasadura (J):</label><input type="number" id="input-J" value="1.5" step="0.5"><span class="unit">m</span></div>
-                    <div class="input-row"><label>Diámetro (d):</label><input type="number" id="input-d" value="10.625" step="0.125"><span class="unit">pulg</span></div>
+                    <div class="input-row highlight"><label>Diámetro (d):</label><input type="number" id="input-d" value="10.625" step="0.125"><span class="unit">pulg</span></div>
                 </div>
 
                 <!-- Checkbox Doble Taco -->
@@ -944,20 +963,23 @@
                 </div>
 
                 <div class="calc-highlight">
-                    <div class="calc-title">CARGA (Q)</div>
+                    <div class="calc-title">Carga Explosiva (Q)</div>
                     <div class="calc-value" id="calc-Q">245.8</div>
                     <div class="calc-unit">kg/pozo</div>
                 </div>
 
-                <div class="calc-grid">
-                    <div class="calc-box"><div class="label">Pd</div><div class="value" id="calc-Pd">8.7 GPa</div></div>
-                    <div class="calc-box"><div class="label">rc</div><div class="value" id="calc-rc">0.8 m</div></div>
-                    <div class="calc-box"><div class="label">rf</div><div class="value" id="calc-rf">3.2 m</div></div>
-                    <div class="calc-box"><div class="label">rd</div><div class="value" id="calc-rd">6.5 m</div></div>
+                <div style="margin-bottom:6px;">
+                    <div style="font-size:var(--font-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:3px;text-align:center;">Zonas de Daño</div>
+                    <div class="calc-grid">
+                        <div class="calc-box"><div class="label">Pd</div><div class="value" id="calc-Pd" style="color:#D22630;">8.7 GPa</div></div>
+                        <div class="calc-box"><div class="label">rc</div><div class="value" id="calc-rc" style="color:#D22630;">0.8 m</div></div>
+                        <div class="calc-box"><div class="label">rf</div><div class="value" id="calc-rf" style="color:#EAAA00;">3.2 m</div></div>
+                        <div class="calc-box"><div class="label">rd</div><div class="value" id="calc-rd" style="color:#4AC5BB;">6.5 m</div></div>
+                    </div>
                 </div>
 
-                <div class="section" style="margin-top: 5px;">
-                    <div class="section-title">🎲 Monte Carlo</div>
+                <div class="section">
+                    <div class="section-title">🎲 Simulación Monte Carlo</div>
                     <div class="input-row"><label>n (uniformidad):</label><input type="number" id="input-n" value="1.2" step="0.05"><span class="unit"></span></div>
                     <div class="input-row"><label>Iteraciones:</label><input type="number" id="input-iterations" value="300" step="100"><span class="unit"></span></div>
                     <div class="input-row"><label>Variabilidad:</label><input type="number" id="input-var" value="10" step="5"><span class="unit">%</span></div>
@@ -1141,11 +1163,11 @@
                     </div>
                 </div>
 
-                <div class="status-indicator pending" id="status-indicator">⏳ Pendiente</div>
+                <div class="status-indicator pending" id="status-indicator" style="margin:6px 0 4px;">⏳ Pendiente</div>
 
-                <div class="btn-group">
-                    <button class="btn btn-primary" id="btn-simulate" onclick="runFullSimulation()">🔥 Simular</button>
-                    <button class="btn btn-success" onclick="saveScenario()">💾 Guardar</button>
+                <div class="btn-group" style="margin-top:0;">
+                    <button class="btn btn-primary" id="btn-simulate" onclick="runFullSimulation()" style="flex:2;padding:5px 8px;">🔥 Simular</button>
+                    <button class="btn btn-success" onclick="saveScenario()" style="flex:1;">💾 Guardar</button>
                     <button class="btn btn-secondary" onclick="resetAll()">🔄</button>
                 </div>
                 
