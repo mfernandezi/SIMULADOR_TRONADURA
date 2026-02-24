@@ -92,7 +92,7 @@
         
         .container {
             display: grid;
-            grid-template-columns: 235px 1fr 310px;
+            grid-template-columns: 260px 1fr 310px;
             gap: 4px;
             padding: 4px;
             height: calc(100vh - 30px);
@@ -109,36 +109,49 @@
         
         .panel-header {
             background: linear-gradient(135deg, var(--bg-card), var(--bg-panel));
-            padding: 4px 8px;
-            font-weight: 600;
-            font-size: var(--font-md);
+            padding: 5px 10px;
+            font-weight: 700;
+            font-size: var(--font-lg);
             border-bottom: 1px solid var(--border);
+            letter-spacing: 0.3px;
         }
         
         .panel-content {
-            padding: 5px;
+            padding: 6px;
             overflow-y: auto;
             flex: 1;
         }
         
-        .section { margin-bottom: 6px; }
+        .panel-content::-webkit-scrollbar { width: 4px; }
+        .panel-content::-webkit-scrollbar-track { background: var(--bg-dark); }
+        .panel-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+        .panel-content::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
+        
+        .section {
+            margin-bottom: 8px;
+            background: rgba(0,0,0,0.12);
+            border-radius: 5px;
+            padding: 6px 7px;
+            border: 1px solid rgba(45,74,82,0.4);
+        }
         
         .section-title {
             color: var(--accent-cyan);
             font-size: var(--font-sm);
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
-            margin-bottom: 3px;
-            padding-bottom: 2px;
+            margin-bottom: 5px;
+            padding-bottom: 3px;
             border-bottom: 1px solid var(--border);
+            letter-spacing: 0.4px;
         }
         
         .input-row {
             display: grid;
-            grid-template-columns: 1fr 42px 22px;
+            grid-template-columns: 1fr 52px 24px;
             align-items: center;
-            margin-bottom: 2px;
-            gap: 2px;
+            margin-bottom: 3px;
+            gap: 3px;
         }
         
         .input-row label { font-size: var(--font-sm); color: var(--text-secondary); }
@@ -146,126 +159,133 @@
         .input-row input, .input-row select {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 2px;
-            padding: 2px 3px;
+            border-radius: 3px;
+            padding: 3px 4px;
             color: var(--text-primary);
             font-family: 'JetBrains Mono', monospace;
             font-size: var(--font-sm);
             text-align: right;
+            transition: border-color 0.15s, box-shadow 0.15s;
         }
         
-        .input-row input:focus { outline: none; border-color: var(--accent-cyan); }
-        .input-row .unit { font-size: var(--font-xs); color: var(--text-muted); }
-        .input-row.highlight input { background: rgba(255, 107, 53, 0.1); border-color: var(--accent-orange); }
+        .input-row input:focus { outline: none; border-color: var(--accent-cyan); box-shadow: 0 0 0 1px rgba(100,204,201,0.2); }
+        .input-row .unit { font-size: var(--font-xs); color: var(--text-muted); text-align: left; }
+        .input-row.highlight input { background: rgba(255, 107, 53, 0.12); border-color: var(--accent-orange); }
+        .input-row.highlight input:focus { border-color: var(--accent-orange); box-shadow: 0 0 0 1px rgba(254,150,102,0.25); }
         
         .explosive-selector {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 3px;
-            padding: 3px;
-            margin-bottom: 3px;
+            border-radius: 4px;
+            padding: 5px;
+            margin-bottom: 4px;
         }
         
         .explosive-selector select {
             width: 100%;
             background: var(--bg-panel);
             border: 1px solid var(--border);
-            border-radius: 2px;
-            padding: 2px;
+            border-radius: 3px;
+            padding: 3px 4px;
             color: var(--text-primary);
             font-size: var(--font-sm);
+            cursor: pointer;
         }
         
         .explosive-props {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 2px;
-            margin-top: 2px;
+            gap: 3px;
+            margin-top: 4px;
         }
         
         .explosive-prop {
             background: var(--bg-panel);
-            padding: 2px;
-            border-radius: 2px;
+            padding: 3px 2px;
+            border-radius: 3px;
             text-align: center;
+            border: 1px solid rgba(45,74,82,0.3);
         }
         
-        .explosive-prop .label { font-size: var(--font-xs); color: var(--text-muted); }
-        .explosive-prop .value { font-size: var(--font-sm); font-weight: 600; color: var(--accent-yellow); }
+        .explosive-prop .label { font-size: var(--font-xs); color: var(--text-muted); margin-bottom: 1px; }
+        .explosive-prop .value { font-size: var(--font-sm); font-weight: 700; color: var(--accent-yellow); }
         
         .calc-highlight {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.1));
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(0, 255, 136, 0.08));
             border: 1px solid var(--accent-cyan);
-            border-radius: 3px;
-            padding: 3px;
-            margin: 3px 0;
+            border-radius: 5px;
+            padding: 6px;
+            margin: 6px 0;
             text-align: center;
         }
         
-        .calc-highlight .calc-title { font-size: var(--font-xs); color: var(--text-muted); }
-        .calc-highlight .calc-value { font-size: 11px; font-weight: 700; color: var(--accent-cyan); }
+        .calc-highlight .calc-title { font-size: var(--font-xs); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .calc-highlight .calc-value { font-size: 14px; font-weight: 700; color: var(--accent-cyan); }
         .calc-highlight .calc-unit { font-size: var(--font-sm); color: var(--text-secondary); }
         
-        .calc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
         
         .calc-box {
             background: var(--bg-card);
-            border-radius: 2px;
-            padding: 2px;
+            border-radius: 3px;
+            padding: 4px 2px;
             text-align: center;
             border: 1px solid var(--border);
         }
         
-        .calc-box .label { font-size: var(--font-xs); color: var(--text-muted); }
+        .calc-box .label { font-size: var(--font-xs); color: var(--text-muted); margin-bottom: 1px; }
         .calc-box .value { font-size: var(--font-sm); font-weight: 600; color: var(--text-primary); }
         
         .btn {
-            padding: 3px 5px;
+            padding: 4px 8px;
             border: none;
-            border-radius: 3px;
+            border-radius: 4px;
             font-size: var(--font-sm);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
         
-        .btn:hover { transform: translateY(-1px); }
+        .btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
+        .btn:active { transform: translateY(0); }
         .btn-primary { background: linear-gradient(135deg, var(--accent-orange), #ff8c5a); color: #000; }
         .btn-success { background: linear-gradient(135deg, var(--success), #34d399); color: #000; }
         .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
         .btn-info { background: linear-gradient(135deg, var(--accent-cyan), #38bdf8); color: #000; }
         .btn-purple { background: linear-gradient(135deg, var(--accent-purple), #c084fc); color: #fff; }
         
-        .btn-group { display: flex; gap: 2px; margin-top: 3px; flex-wrap: wrap; }
+        .btn-group { display: flex; gap: 3px; margin-top: 5px; flex-wrap: wrap; }
         
         .checkbox-container {
             display: flex;
             align-items: center;
-            gap: 3px;
+            gap: 6px;
             background: var(--bg-card);
-            padding: 2px 4px;
-            border-radius: 2px;
+            padding: 5px 8px;
+            border-radius: 4px;
             border: 1px solid var(--border);
-            margin-bottom: 3px;
+            margin-bottom: 5px;
             cursor: pointer;
             font-size: var(--font-sm);
+            font-weight: 600;
             transition: all 0.2s;
         }
         
-        .checkbox-container:hover { border-color: var(--accent-purple); }
+        .checkbox-container:hover { border-color: var(--accent-purple); background: rgba(124, 58, 237, 0.08); }
         .checkbox-container.active { 
-            background: rgba(124, 58, 237, 0.15); 
+            background: rgba(124, 58, 237, 0.18); 
             border-color: var(--accent-purple);
+            box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.2);
         }
         
-        .checkbox-container input { width: 9px; height: 9px; }
+        .checkbox-container input { width: 12px; height: 12px; pointer-events: none; accent-color: var(--accent-purple); }
         
         /* Panel de Doble Taco */
         .doble-taco-config {
             background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(168, 85, 247, 0.05));
             border: 1px solid var(--accent-purple);
-            border-radius: 3px;
-            padding: 4px;
+            border-radius: 5px;
+            padding: 6px 7px;
             margin: 4px 0;
             display: none;
         }
@@ -286,8 +306,8 @@
         .pozos-especiales-config {
             background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(239, 68, 68, 0.05));
             border: 1px solid #8AD4EB;
-            border-radius: 3px;
-            padding: 4px;
+            border-radius: 5px;
+            padding: 6px 7px;
             margin: 4px 0;
         }
         
@@ -298,7 +318,8 @@
         
         .pozo-tipo-box {
             background: rgba(0, 0, 0, 0.2);
-            border-radius: 3px;
+            border-radius: 4px;
+            padding: 5px;
             padding: 4px;
         }
         
@@ -758,19 +779,18 @@
                         <span class="unit">%</span>
                     </div>
                     
-                    <!-- Lilly Calculado (parámetros estimados internamente) -->
-                    <div style="background:rgba(168,85,247,0.1);border:1px solid #A66999;border-radius:3px;padding:4px;margin-top:4px;">
-                        <div style="font-size: var(--font-sm);color:#9aa0a6;text-align:center;margin-bottom:3px;">Estimación automática desde UCS y RQD</div>
-                        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;text-align:center;">
-                            <div><span style="font-size: var(--font-xs);color:#9aa0a6;">RMD</span><br><span id="calc-RMD" style="font-size: var(--font-sm);color:#A66999;font-weight:600;">20</span></div>
-                            <div><span style="font-size: var(--font-xs);color:#9aa0a6;">JPS</span><br><span id="calc-JPS" style="font-size: var(--font-sm);color:#A66999;font-weight:600;">20</span></div>
-                            <div><span style="font-size: var(--font-xs);color:#9aa0a6;">JPO</span><br><span id="calc-JPO" style="font-size: var(--font-sm);color:#A66999;font-weight:600;">20</span></div>
-                            <div><span style="font-size: var(--font-xs);color:#9aa0a6;">SGI</span><br><span id="calc-SGI" style="font-size: var(--font-sm);color:#A66999;font-weight:600;">16</span></div>
+                    <div style="background:rgba(168,85,247,0.08);border:1px solid rgba(166,105,153,0.5);border-radius:4px;padding:6px;margin-top:6px;">
+                        <div style="font-size: var(--font-xs);color:#9aa0a6;text-align:center;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.3px;">Estimación desde UCS y RQD</div>
+                        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px;text-align:center;">
+                            <div style="background:rgba(0,0,0,0.2);border-radius:3px;padding:2px 0;"><span style="font-size:7px;color:#9aa0a6;display:block;">RMD</span><span id="calc-RMD" style="font-size:var(--font-sm);color:#A66999;font-weight:700;">20</span></div>
+                            <div style="background:rgba(0,0,0,0.2);border-radius:3px;padding:2px 0;"><span style="font-size:7px;color:#9aa0a6;display:block;">JPS</span><span id="calc-JPS" style="font-size:var(--font-sm);color:#A66999;font-weight:700;">20</span></div>
+                            <div style="background:rgba(0,0,0,0.2);border-radius:3px;padding:2px 0;"><span style="font-size:7px;color:#9aa0a6;display:block;">JPO</span><span id="calc-JPO" style="font-size:var(--font-sm);color:#A66999;font-weight:700;">20</span></div>
+                            <div style="background:rgba(0,0,0,0.2);border-radius:3px;padding:2px 0;"><span style="font-size:7px;color:#9aa0a6;display:block;">SGI</span><span id="calc-SGI" style="font-size:var(--font-sm);color:#A66999;font-weight:700;">16</span></div>
                         </div>
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;text-align:center;margin-top:3px;">
-                            <div><span style="font-size: var(--font-xs);color:#9aa0a6;">HP</span><br><span id="calc-HP" style="font-size: var(--font-sm);color:#A66999;font-weight:600;">6.0</span></div>
-                            <div><span style="font-size: var(--font-xs);color:#9aa0a6;">BI</span><br><span id="calc-BI" style="font-size: var(--font-sm);color:#A66999;font-weight:600;">41</span></div>
-                            <div><span style="font-size: var(--font-xs);color:#9aa0a6;">A (Lilly)</span><br><span id="calc-A-lilly" style="font-size: var(--font-sm);color:#64CCC9;font-weight:700;">4.9</span></div>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;text-align:center;margin-top:4px;">
+                            <div style="background:rgba(0,0,0,0.2);border-radius:3px;padding:2px 0;"><span style="font-size:7px;color:#9aa0a6;display:block;">HP</span><span id="calc-HP" style="font-size:var(--font-sm);color:#A66999;font-weight:700;">6.0</span></div>
+                            <div style="background:rgba(0,0,0,0.2);border-radius:3px;padding:2px 0;"><span style="font-size:7px;color:#9aa0a6;display:block;">BI</span><span id="calc-BI" style="font-size:var(--font-sm);color:#A66999;font-weight:700;">41</span></div>
+                            <div style="background:rgba(100,204,201,0.1);border:1px solid rgba(100,204,201,0.3);border-radius:3px;padding:2px 0;"><span style="font-size:7px;color:#64CCC9;display:block;">A (Lilly)</span><span id="calc-A-lilly" style="font-size:var(--font-md);color:#64CCC9;font-weight:700;">4.9</span></div>
                         </div>
                     </div>
                     
@@ -784,28 +804,27 @@
                     </div>
                 </div>
                 
-                <!-- Factores Kx/Kn -->
-                <div class="section" style="background:rgba(255,107,53,0.08);border:1px solid var(--accent-orange);border-radius:3px;padding:4px;margin-bottom:4px;">
-                    <div class="section-title" style="color:var(--accent-orange);border-bottom-color:var(--accent-orange);">🎯 Factores Kx/Kn (Calibración)</div>
-                    <div style="font-size: var(--font-sm);color:#9aa0a6;margin-bottom:4px;padding:2px;background:rgba(0,0,0,0.2);border-radius:2px;">
-                        ⚠️ Kx/Kn se COMBINAN con A (Lilly), no son excluyentes
+                <div class="section" style="background:rgba(255,107,53,0.06);border-color:rgba(254,150,102,0.4);">
+                    <div class="section-title" style="color:var(--accent-orange);border-bottom-color:rgba(254,150,102,0.4);">🎯 Calibración Kx / Kn</div>
+                    <div style="font-size:var(--font-xs);color:#9aa0a6;margin-bottom:5px;padding:3px 4px;background:rgba(0,0,0,0.2);border-radius:3px;text-align:center;">
+                        Kx/Kn se combinan con A (Lilly)
                     </div>
-                    <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px;">
-                        <label style="font-size: var(--font-sm);color:#9aa0a6;width:20px;">Kx</label>
-                        <input type="range" id="input-Kx" min="0.1" max="2" step="0.01" value="1.0" style="flex:1;height:4px;">
-                        <span id="val-Kx" style="font-size: var(--font-md);font-weight:600;color:var(--accent-orange);min-width:30px;text-align:right;">1.00</span>
+                    <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
+                        <label style="font-size:var(--font-sm);color:#FE9666;width:22px;font-weight:700;">Kx</label>
+                        <input type="range" id="input-Kx" min="0.1" max="2" step="0.01" value="1.0" style="flex:1;height:5px;accent-color:var(--accent-orange);">
+                        <span id="val-Kx" style="font-size:var(--font-md);font-weight:700;color:var(--accent-orange);min-width:32px;text-align:right;">1.00</span>
                     </div>
-                    <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px;">
-                        <label style="font-size: var(--font-sm);color:#9aa0a6;width:20px;">Kn</label>
-                        <input type="range" id="input-Kn" min="0.5" max="1.5" step="0.01" value="1.0" style="flex:1;height:4px;">
-                        <span id="val-Kn" style="font-size: var(--font-md);font-weight:600;color:var(--accent-orange);min-width:30px;text-align:right;">1.00</span>
+                    <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;">
+                        <label style="font-size:var(--font-sm);color:#FE9666;width:22px;font-weight:700;">Kn</label>
+                        <input type="range" id="input-Kn" min="0.5" max="1.5" step="0.01" value="1.0" style="flex:1;height:5px;accent-color:var(--accent-orange);">
+                        <span id="val-Kn" style="font-size:var(--font-md);font-weight:700;color:var(--accent-orange);min-width:32px;text-align:right;">1.00</span>
                     </div>
-                    <button class="btn btn-primary" onclick="estimateKxKn()" style="width:100%;font-size: var(--font-sm);">📊 Estimar Kx/Kn desde UCS+RQD</button>
-                    <div style="font-size: var(--font-xs);color:#9aa0a6;margin-top:3px;text-align:center;">
-                        <span style="color:#4AC5BB;">Kx&lt;1 → más fino</span> | 
-                        <span style="color:#D22630;">Kx&gt;1 → más grueso</span>
+                    <button class="btn btn-primary" onclick="estimateKxKn()" style="width:100%;font-size:var(--font-sm);padding:4px;">📊 Estimar Kx/Kn desde UCS+RQD</button>
+                    <div style="display:flex;justify-content:center;gap:10px;font-size:var(--font-xs);margin-top:4px;">
+                        <span style="color:#4AC5BB;">Kx&lt;1 → fino</span>
+                        <span style="color:#D22630;">Kx&gt;1 → grueso</span>
                     </div>
-                    <div style="font-size: var(--font-xs);color:#EAAA00;margin-top:2px;text-align:center;">Ref UGT-4 Chuquicamata: Kx=0.31, Kn=1.04</div>
+                    <div style="font-size:var(--font-xs);color:#EAAA00;margin-top:3px;text-align:center;opacity:0.8;">Ref UGT-4 Chuquicamata: Kx=0.31, Kn=1.04</div>
                 </div>
 
                 <div class="section">
@@ -875,13 +894,13 @@
                 </div>
 
                 <div class="section">
-                    <div class="section-title">📐 Geometría</div>
+                    <div class="section-title">📐 Geometría de Perforación</div>
                     <div class="input-row"><label>Burden (B):</label><input type="number" id="input-B" value="6.5" step="0.5"><span class="unit">m</span></div>
                     <div class="input-row"><label>Espaciam. (S):</label><input type="number" id="input-S" value="7.5" step="0.5"><span class="unit">m</span></div>
                     <div class="input-row"><label>Taco Sup. (T):</label><input type="number" id="input-T" value="5.25" step="0.25"><span class="unit">m</span></div>
-                    <div class="input-row"><label>Altura (H):</label><input type="number" id="input-H" value="15" step="1"><span class="unit">m</span></div>
+                    <div class="input-row"><label>Altura banco (H):</label><input type="number" id="input-H" value="15" step="1"><span class="unit">m</span></div>
                     <div class="input-row"><label>Pasadura (J):</label><input type="number" id="input-J" value="1.5" step="0.5"><span class="unit">m</span></div>
-                    <div class="input-row"><label>Diámetro (d):</label><input type="number" id="input-d" value="10.625" step="0.125"><span class="unit">pulg</span></div>
+                    <div class="input-row highlight"><label>Diámetro (d):</label><input type="number" id="input-d" value="10.625" step="0.125"><span class="unit">pulg</span></div>
                 </div>
 
                 <!-- Checkbox Doble Taco -->
@@ -944,20 +963,23 @@
                 </div>
 
                 <div class="calc-highlight">
-                    <div class="calc-title">CARGA (Q)</div>
+                    <div class="calc-title">Carga Explosiva (Q)</div>
                     <div class="calc-value" id="calc-Q">245.8</div>
                     <div class="calc-unit">kg/pozo</div>
                 </div>
 
-                <div class="calc-grid">
-                    <div class="calc-box"><div class="label">Pd</div><div class="value" id="calc-Pd">8.7 GPa</div></div>
-                    <div class="calc-box"><div class="label">rc</div><div class="value" id="calc-rc">0.8 m</div></div>
-                    <div class="calc-box"><div class="label">rf</div><div class="value" id="calc-rf">3.2 m</div></div>
-                    <div class="calc-box"><div class="label">rd</div><div class="value" id="calc-rd">6.5 m</div></div>
+                <div style="margin-bottom:6px;">
+                    <div style="font-size:var(--font-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:3px;text-align:center;">Zonas de Daño</div>
+                    <div class="calc-grid">
+                        <div class="calc-box"><div class="label">Pd</div><div class="value" id="calc-Pd" style="color:#D22630;">8.7 GPa</div></div>
+                        <div class="calc-box"><div class="label">rc</div><div class="value" id="calc-rc" style="color:#D22630;">0.8 m</div></div>
+                        <div class="calc-box"><div class="label">rf</div><div class="value" id="calc-rf" style="color:#EAAA00;">3.2 m</div></div>
+                        <div class="calc-box"><div class="label">rd</div><div class="value" id="calc-rd" style="color:#4AC5BB;">6.5 m</div></div>
+                    </div>
                 </div>
 
-                <div class="section" style="margin-top: 5px;">
-                    <div class="section-title">🎲 Monte Carlo</div>
+                <div class="section">
+                    <div class="section-title">🎲 Simulación Monte Carlo</div>
                     <div class="input-row"><label>n (uniformidad):</label><input type="number" id="input-n" value="1.2" step="0.05"><span class="unit"></span></div>
                     <div class="input-row"><label>Iteraciones:</label><input type="number" id="input-iterations" value="300" step="100"><span class="unit"></span></div>
                     <div class="input-row"><label>Variabilidad:</label><input type="number" id="input-var" value="10" step="5"><span class="unit">%</span></div>
@@ -979,71 +1001,10 @@
                         <span class="unit">pozos</span>
                     </div>
                     
-                    <!-- ═══════════ PRODUCCIÓN ═══════════ -->
-                    <div class="pozo-tipo-box" style="border-left: 3px solid #4AC5BB; padding-left: 6px; margin: 6px 0; background: rgba(16,185,129,0.1);">
-                        <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px;">
-                            <span style="color: #4AC5BB; font-weight: bold; font-size: var(--font-md);">🟢 PRODUCCIÓN</span>
-                            <span style="font-size: var(--font-sm); color: #9aa0a6;">(Carga 100%)</span>
-                        </div>
-                        <div class="input-row">
-                            <label>Filas Producción:</label>
-                            <input type="number" id="input-filas-prod" value="3" min="1" max="10" step="1">
-                            <span class="unit">filas</span>
-                        </div>
+                    <div style="font-size:var(--font-xs);color:#6b7280;text-align:center;margin-bottom:6px;padding:3px;background:rgba(0,0,0,0.2);border-radius:3px;">
+                        Orden desde talud: Precorte → Amortiguadores → Producción → Borde
                     </div>
-                    
-                    <!-- ═══════════ AMORTIGUADORES ═══════════ -->
-                    <div class="pozo-tipo-box" style="border-left: 3px solid #EAAA00; padding-left: 6px; margin: 6px 0;">
-                        <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px;">
-                            <input type="checkbox" id="check-amortiguadores" checked style="margin: 0;">
-                            <span style="color: #EAAA00; font-weight: bold; font-size: var(--font-md);">🟡 AMORTIGUADORES</span>
-                            <span style="font-size: var(--font-sm); color: #9aa0a6;">(Transición)</span>
-                        </div>
-                        <div id="amortiguadores-options">
-                            <div class="input-row">
-                                <label>Filas Amortiguadores:</label>
-                                <input type="number" id="input-filas-amortiguadores" value="1" min="1" max="3" step="1">
-                                <span class="unit">filas</span>
-                            </div>
-                            <div class="input-row">
-                                <label>Factor Burden:</label>
-                                <input type="number" id="input-amortiguadores-burden" value="0.75" step="0.05" min="0.5" max="1.0">
-                                <span class="unit">×B</span>
-                            </div>
-                            <div class="input-row">
-                                <label>Factor Carga:</label>
-                                <input type="number" id="input-amortiguadores-carga" value="0.75" step="0.05" min="0.4" max="1.0">
-                                <span class="unit">×Q</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- ═══════════ BORDE ═══════════ -->
-                    <div class="pozo-tipo-box" style="border-left: 3px solid #D22630; padding-left: 6px; margin: 6px 0;">
-                        <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px;">
-                            <input type="checkbox" id="check-borde" checked style="margin: 0;">
-                            <span style="color: #D22630; font-weight: bold; font-size: var(--font-md);">🔴 BORDE</span>
-                            <span style="font-size: var(--font-sm); color: #9aa0a6;">(Última fila hacia talud)</span>
-                        </div>
-                        <div id="borde-options">
-                            <div class="input-row">
-                                <label>Filas Borde:</label>
-                                <input type="number" id="input-filas-borde" value="1" min="1" max="2" step="1">
-                                <span class="unit">filas</span>
-                            </div>
-                            <div class="input-row">
-                                <label>Factor Burden:</label>
-                                <input type="number" id="input-borde-burden" value="0.65" step="0.05" min="0.4" max="1.0">
-                                <span class="unit">×B</span>
-                            </div>
-                            <div class="input-row">
-                                <label>Factor Carga:</label>
-                                <input type="number" id="input-borde-carga" value="0.60" step="0.05" min="0.3" max="1.0">
-                                <span class="unit">×Q</span>
-                            </div>
-                        </div>
-                    </div>
-                    
+
                     <!-- ═══════════ PRECORTE ═══════════ -->
                     <div class="pozo-tipo-box" style="border-left: 3px solid #8AD4EB; padding-left: 6px; margin: 6px 0;">
                         <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px;">
@@ -1069,6 +1030,71 @@
                             </div>
                             <div style="font-size: var(--font-sm); color: #8AD4EB; margin-top: 3px; padding: 2px; background: rgba(6,182,212,0.1); border-radius: 2px;">
                                 ⏱️ El precorte detona ANTES que la producción
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ═══════════ AMORTIGUADORES ═══════════ -->
+                    <div class="pozo-tipo-box" style="border-left: 3px solid #EAAA00; padding-left: 6px; margin: 6px 0;">
+                        <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px;">
+                            <input type="checkbox" id="check-amortiguadores" checked style="margin: 0;">
+                            <span style="color: #EAAA00; font-weight: bold; font-size: var(--font-md);">🟡 AMORTIGUADORES</span>
+                            <span style="font-size: var(--font-sm); color: #9aa0a6;">(Transición)</span>
+                        </div>
+                        <div id="amortiguadores-options">
+                            <div class="input-row">
+                                <label>Filas Amortiguadores:</label>
+                                <input type="number" id="input-filas-amortiguadores" value="1" min="1" max="3" step="1">
+                                <span class="unit">filas</span>
+                            </div>
+                            <div class="input-row">
+                                <label>Factor Burden:</label>
+                                <input type="number" id="input-amortiguadores-burden" value="0.75" step="0.05" min="0.5" max="1.0">
+                                <span class="unit">×B</span>
+                            </div>
+                            <div class="input-row">
+                                <label>Factor Carga:</label>
+                                <input type="number" id="input-amortiguadores-carga" value="0.75" step="0.05" min="0.4" max="1.0">
+                                <span class="unit">×Q</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ═══════════ PRODUCCIÓN ═══════════ -->
+                    <div class="pozo-tipo-box" style="border-left: 3px solid #4AC5BB; padding-left: 6px; margin: 6px 0; background: rgba(16,185,129,0.1);">
+                        <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px;">
+                            <span style="color: #4AC5BB; font-weight: bold; font-size: var(--font-md);">🟢 PRODUCCIÓN</span>
+                            <span style="font-size: var(--font-sm); color: #9aa0a6;">(Carga 100%)</span>
+                        </div>
+                        <div class="input-row">
+                            <label>Filas Producción:</label>
+                            <input type="number" id="input-filas-prod" value="3" min="1" max="10" step="1">
+                            <span class="unit">filas</span>
+                        </div>
+                    </div>
+
+                    <!-- ═══════════ BORDE ═══════════ -->
+                    <div class="pozo-tipo-box" style="border-left: 3px solid #D22630; padding-left: 6px; margin: 6px 0;">
+                        <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px;">
+                            <input type="checkbox" id="check-borde" checked style="margin: 0;">
+                            <span style="color: #D22630; font-weight: bold; font-size: var(--font-md);">🔴 BORDE</span>
+                            <span style="font-size: var(--font-sm); color: #9aa0a6;">(Cara libre)</span>
+                        </div>
+                        <div id="borde-options">
+                            <div class="input-row">
+                                <label>Filas Borde:</label>
+                                <input type="number" id="input-filas-borde" value="1" min="1" max="2" step="1">
+                                <span class="unit">filas</span>
+                            </div>
+                            <div class="input-row">
+                                <label>Factor Burden:</label>
+                                <input type="number" id="input-borde-burden" value="0.65" step="0.05" min="0.4" max="1.0">
+                                <span class="unit">×B</span>
+                            </div>
+                            <div class="input-row">
+                                <label>Factor Carga:</label>
+                                <input type="number" id="input-borde-carga" value="0.60" step="0.05" min="0.3" max="1.0">
+                                <span class="unit">×Q</span>
                             </div>
                         </div>
                     </div>
@@ -1109,7 +1135,7 @@
                             </div>
                         </div>
                         <div style="font-size: var(--font-sm); color: #9aa0a6; margin-top: 3px; text-align:center;">
-                            Secuencia: Precorte(100ms) → Amort. → Prod(5000ms) → Borde
+                            Secuencia: Precorte → Amortiguadores → Producción → Borde
                         </div>
                     </div>
                     
@@ -1121,12 +1147,12 @@
                         </div>
                         <div style="display: flex; justify-content: center; gap: 8px; font-size: var(--font-sm); margin-top: 4px; flex-wrap: wrap;">
                             <span style="color: #8AD4EB;">■ Precorte</span>
-                            <span style="color: #D22630;">■ Borde</span>
                             <span style="color: #EAAA00;">■ Amortiguadores</span>
                             <span style="color: #4AC5BB;">■ Producción</span>
+                            <span style="color: #D22630;">■ Borde</span>
                         </div>
                         <div style="font-size: var(--font-xs); text-align: center; color: #6b7280; margin-top: 2px;">
-                            Detonación: Precorte→Amortiguadores→Producción→Borde
+                            Detonación: Precorte → Amortiguadores → Producción → Borde
                         </div>
                     </div>
                     
@@ -1141,11 +1167,11 @@
                     </div>
                 </div>
 
-                <div class="status-indicator pending" id="status-indicator">⏳ Pendiente</div>
+                <div class="status-indicator pending" id="status-indicator" style="margin:6px 0 4px;">⏳ Pendiente</div>
 
-                <div class="btn-group">
-                    <button class="btn btn-primary" id="btn-simulate" onclick="runFullSimulation()">🔥 Simular</button>
-                    <button class="btn btn-success" onclick="saveScenario()">💾 Guardar</button>
+                <div class="btn-group" style="margin-top:0;">
+                    <button class="btn btn-primary" id="btn-simulate" onclick="runFullSimulation()" style="flex:2;padding:5px 8px;">🔥 Simular</button>
+                    <button class="btn btn-success" onclick="saveScenario()" style="flex:1;">💾 Guardar</button>
                     <button class="btn btn-secondary" onclick="resetAll()">🔄</button>
                 </div>
                 
@@ -1222,9 +1248,9 @@
                         <div class="global-controls">
                             <button id="btn-play" onclick="toggleAnimation()">▶</button>
                             <button onclick="resetAnimation()">⟲</button>
-                            <button onclick="stepAnimation(30)">▶▶</button>
+                            <button onclick="stepAnimation(Math.max(50, waveData.maxTime * 0.05))">▶▶</button>
                             <div class="speed-control">
-                                <input type="range" id="speed-slider" min="0.2" max="3" step="0.2" value="1">
+                                <input type="range" id="speed-slider" min="0.5" max="10" step="0.5" value="1">
                                 <span class="speed-value" id="speed-value">1x</span>
                             </div>
                         </div>
@@ -2318,30 +2344,26 @@
             const visual = document.getElementById('malla-visual');
             if (!visual) return;
             
-            let html = '';
+            let html = '<div style="font-size: var(--font-sm); color: #9aa0a6; writing-mode: vertical-rl; transform: rotate(180deg); margin-right: 4px;">TALUD ←</div>';
             
-            // Precorte (si está activo)
             if (params.precorteEnabled) {
                 html += `<div style="background: #8AD4EB; width: 6px; height: 30px; border-radius: 2px;" title="Precorte (${pozosEspecialesCalc.pozosPrecorte} pozos)"></div>`;
             }
             
-            // Borde
-            if (params.bordeEnabled) {
-                for (let i = 0; i < params.filasBorde; i++) {
-                    html += `<div style="background: #D22630; width: 10px; height: 30px; border-radius: 2px; margin-left: 2px;" title="Borde (${params.columnas} pozos)"></div>`;
-                }
-            }
-            
-            // Amortiguadores
             if (params.amortiguadoresEnabled) {
                 for (let i = 0; i < params.filasAmortiguadores; i++) {
                     html += `<div style="background: #EAAA00; width: 12px; height: 30px; border-radius: 2px; margin-left: 2px;" title="Amortiguadores (${params.columnas} pozos)"></div>`;
                 }
             }
             
-            // Producción
             for (let i = 0; i < params.filasProd; i++) {
                 html += `<div style="background: #4AC5BB; width: 14px; height: 30px; border-radius: 2px; margin-left: 2px;" title="Producción (${params.columnas} pozos)"></div>`;
+            }
+            
+            if (params.bordeEnabled) {
+                for (let i = 0; i < params.filasBorde; i++) {
+                    html += `<div style="background: #D22630; width: 10px; height: 30px; border-radius: 2px; margin-left: 2px;" title="Borde (${params.columnas} pozos)"></div>`;
+                }
             }
             
             html += `<div style="font-size: var(--font-sm); color: #9aa0a6; writing-mode: vertical-rl; transform: rotate(180deg); margin-left: 4px;">→ CARA LIBRE</div>`;
@@ -2867,65 +2889,58 @@
                     if (row === filaActual) return 'precorte';
                     filaActual++;
                 }
-                if (params.bordeEnabled) {
-                    if (row < filaActual + filasBorde) return 'borde';
-                    filaActual += filasBorde;
-                }
                 if (params.amortiguadoresEnabled) {
                     if (row < filaActual + filasAmortiguadores) return 'amortiguadores';
                     filaActual += filasAmortiguadores;
                 }
+                if (row < filaActual + filasProd) return 'produccion';
+                filaActual += filasProd;
+                if (params.bordeEnabled) {
+                    if (row < filaActual + filasBorde) return 'borde';
+                }
                 return 'produccion';
             }
             
-            // Calcular tiempos base para cada tipo según MLP (valores configurables)
-            // Orden de detonación: Precorte -> Producción -> Amortiguadores -> Borde
+            // Secuencia MLP: 1° Precorte → 2° Amortiguadores → 3° Producción → 4° Borde
+            // Orden espacial (talud→cara libre): Precorte → Amortiguadores → Producción → Borde
             const TIEMPO_PRECORTE = params.tiempoPrecorte;
             const TIEMPO_INICIO_PROD = params.tiempoProd;
-            const MS_ENTRE_POZOS_PROD = params.msEntrePozos;
+            const MS_ENTRE_POZOS = params.msEntrePozos;
             const MS_BURDEN_PROD = params.msBurdenProd;
-            const MS_BURDEN_AMORTIGUADORES = params.msBurdenAmortiguadores;
+            const MS_BURDEN_AMORT = params.msBurdenAmortiguadores;
             const MS_BURDEN_BORDE = params.msBurdenBorde;
             
-            // Primera pasada: calcular tiempo máximo de producción
-            let maxTiempoProd = TIEMPO_INICIO_PROD;
+            // Paso 1: Calcular tiempo máximo de amortiguadores
+            const TIEMPO_AMORT = TIEMPO_PRECORTE + 500;
+            let maxTiempoAmort = TIEMPO_AMORT;
             
             for (let row = 0; row < totalRows; row++) {
-                const tipo = getTipoPozoWave(row);
-                if (tipo === 'produccion') {
-                    // Filas de producción relativas
-                    let filaProdRelativa = row;
-                    if (params.pozosEspeciales) {
-                        filaProdRelativa = row - filasPrecorte - filasBorde - filasAmortiguadores;
-                    }
+                if (getTipoPozoWave(row) === 'amortiguadores') {
+                    const filaRel = Math.max(0, row - filasPrecorte);
                     for (let col = 0; col < totalCols; col++) {
-                        const detTime = TIEMPO_INICIO_PROD + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * params.B;
-                        maxTiempoProd = Math.max(maxTiempoProd, detTime);
+                        const t = TIEMPO_AMORT + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_AMORT * params.B;
+                        maxTiempoAmort = Math.max(maxTiempoAmort, t);
                     }
                 }
             }
             
-            // Segunda pasada: asignar todos los tiempos
-            // ORDEN MLP: 1° Precorte → 2° Amortiguadores → 3° Producción → 4° Borde
+            // Paso 2: Producción inicia después de amortiguadores (o directo si no hay)
+            const TIEMPO_PROD = filasAmortiguadores > 0 ? maxTiempoAmort + 200 : TIEMPO_INICIO_PROD;
             
-            // Calcular tiempo máximo de amortiguadores para que producción inicie después
-            const TIEMPO_AMORTIGUADORES = TIEMPO_PRECORTE + 500; // 500ms después de precorte
-            let maxTiempoAmortiguadores = TIEMPO_AMORTIGUADORES;
+            // Paso 3: Calcular tiempo máximo de producción (necesario para borde)
+            let maxTiempoProd = TIEMPO_PROD;
             
             for (let row = 0; row < totalRows; row++) {
-                const tipo = getTipoPozoWave(row);
-                if (tipo === 'amortiguadores') {
-                    let filaAmortRelativa = row - filasPrecorte - filasBorde;
+                if (getTipoPozoWave(row) === 'produccion') {
+                    const filaRel = Math.max(0, row - filasPrecorte - filasAmortiguadores);
                     for (let col = 0; col < totalCols; col++) {
-                        const t = TIEMPO_AMORTIGUADORES + col * MS_ENTRE_POZOS_PROD + filaAmortRelativa * MS_BURDEN_AMORTIGUADORES * params.B;
-                        maxTiempoAmortiguadores = Math.max(maxTiempoAmortiguadores, t);
+                        const t = TIEMPO_PROD + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_PROD * params.B;
+                        maxTiempoProd = Math.max(maxTiempoProd, t);
                     }
                 }
             }
             
-            // Producción inicia después de amortiguadores
-            const TIEMPO_REAL_PROD = filasAmortiguadores > 0 ? maxTiempoAmortiguadores + 200 : TIEMPO_INICIO_PROD;
-            
+            // Paso 4: Asignar tiempos a cada pozo
             for (let row = 0; row < totalRows; row++) {
                 const tipo = getTipoPozoWave(row);
                 
@@ -2933,26 +2948,18 @@
                     let detTime;
                     
                     if (tipo === 'precorte') {
-                        // 1° Precorte: 100ms, secuencia por columna
                         detTime = TIEMPO_PRECORTE + col * 31;
                     } else if (tipo === 'amortiguadores') {
-                        // 2° Amortiguadores: después de precorte (~500-600ms)
-                        let filaAmortRelativa = row - filasPrecorte - filasBorde;
-                        if (filaAmortRelativa < 0) filaAmortRelativa = 0;
-                        detTime = TIEMPO_AMORTIGUADORES + col * MS_ENTRE_POZOS_PROD + filaAmortRelativa * MS_BURDEN_AMORTIGUADORES * params.B;
+                        const filaRel = Math.max(0, row - filasPrecorte);
+                        detTime = TIEMPO_AMORT + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_AMORT * params.B;
                     } else if (tipo === 'produccion') {
-                        // 3° Producción: después de amortiguadores
-                        let filaProdRelativa = row - filasPrecorte - filasBorde - filasAmortiguadores;
-                        if (filaProdRelativa < 0) filaProdRelativa = 0;
-                        detTime = TIEMPO_REAL_PROD + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * params.B;
-                        maxTiempoProd = Math.max(maxTiempoProd, detTime);
+                        const filaRel = Math.max(0, row - filasPrecorte - filasAmortiguadores);
+                        detTime = TIEMPO_PROD + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_PROD * params.B;
                     } else if (tipo === 'borde') {
-                        // 4° Borde: al final, después de producción
-                        let filaBordeRelativa = row - filasPrecorte;
-                        if (filaBordeRelativa < 0) filaBordeRelativa = 0;
-                        detTime = maxTiempoProd + 200 + col * MS_ENTRE_POZOS_PROD + filaBordeRelativa * MS_BURDEN_BORDE * params.B;
+                        const filaRel = Math.max(0, row - filasPrecorte - filasAmortiguadores - filasProd);
+                        detTime = maxTiempoProd + 200 + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_BORDE * params.B;
                     } else {
-                        detTime = col * 30 + row * 52; // Fallback
+                        detTime = col * 30 + row * 52;
                     }
                     
                     maxTime = Math.max(maxTime, detTime);
@@ -2984,6 +2991,7 @@
         // =====================================================================
         function createScene3D() {
             while (scene.children.length > 2) scene.remove(scene.children[scene.children.length - 1]);
+            pozos3D.forEach(p => { if (p._zoneGroup) scene.remove(p._zoneGroup); });
             pozos3D = [];
             zoneObjects3D = [];
             rockObjects3D = [];
@@ -3029,21 +3037,11 @@
                 
                 let filaActual = 0;
                 
-                // Precorte (fila 0 si está activo)
                 if (params.precorteEnabled) {
                     if (row === filaActual) return { tipo: 'precorte', color: 0x8AD4EB, cargaFactor: 0.3 };
                     filaActual++;
                 }
                 
-                // Borde
-                if (params.bordeEnabled) {
-                    if (row < filaActual + params.filasBorde) {
-                        return { tipo: 'borde', color: 0xD22630, cargaFactor: params.bordeCargaFactor };
-                    }
-                    filaActual += params.filasBorde;
-                }
-                
-                // Amortiguadores
                 if (params.amortiguadoresEnabled) {
                     if (row < filaActual + params.filasAmortiguadores) {
                         return { tipo: 'amortiguadores', color: 0xEAAA00, cargaFactor: params.amortiguadoresCargaFactor };
@@ -3051,13 +3049,20 @@
                     filaActual += params.filasAmortiguadores;
                 }
                 
-                // Producción (resto)
+                if (row < filaActual + params.filasProd) {
+                    return { tipo: 'produccion', color: 0x4AC5BB, cargaFactor: 1.0 };
+                }
+                filaActual += params.filasProd;
+                
+                if (params.bordeEnabled) {
+                    return { tipo: 'borde', color: 0xD22630, cargaFactor: params.bordeCargaFactor };
+                }
+                
                 return { tipo: 'produccion', color: 0x4AC5BB, cargaFactor: 1.0 };
             }
 
             let id = 1;
             
-            // Calcular tiempos base para cada tipo según MLP (valores configurables)
             const TIEMPO_PRECORTE = params.tiempoPrecorte;
             const TIEMPO_INICIO_PROD = params.tiempoProd;
             const MS_ENTRE_POZOS_PROD = params.msEntrePozos;
@@ -3065,20 +3070,37 @@
             const MS_BURDEN_AMORTIGUADORES = params.msBurdenAmortiguadores;
             const MS_BURDEN_BORDE = params.msBurdenBorde;
             
-            // Calcular filas por tipo
             let filasPrecorte = params.precorteEnabled ? 1 : 0;
             let filasBorde = params.bordeEnabled ? params.filasBorde : 0;
             let filasAmortiguadores = params.amortiguadoresEnabled ? params.filasAmortiguadores : 0;
             
-            // Calcular tiempo máximo de producción
-            let maxTiempoProd = TIEMPO_INICIO_PROD;
+            // Secuencia MLP: 1° Precorte → 2° Amortiguadores → 3° Producción → 4° Borde
+            // Orden espacial (talud→cara libre): Precorte → Amortiguadores → Producción → Borde
+            const MS_ENTRE_POZOS = params.msEntrePozos;
+            const MS_BURDEN_AMORT = params.msBurdenAmortiguadores;
+            
+            const TIEMPO_AMORT_3D = TIEMPO_PRECORTE + 500;
+            let maxTiempoAmort3D = TIEMPO_AMORT_3D;
+            if (params.pozosEspeciales && filasAmortiguadores > 0) {
+                for (let row = 0; row < totalRows; row++) {
+                    if (getTipoPozo(row).tipo === 'amortiguadores') {
+                        const filaRel = Math.max(0, row - filasPrecorte);
+                        for (let col = 0; col < totalCols; col++) {
+                            const t = TIEMPO_AMORT_3D + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_AMORT * B;
+                            maxTiempoAmort3D = Math.max(maxTiempoAmort3D, t);
+                        }
+                    }
+                }
+            }
+            const TIEMPO_PROD_3D = filasAmortiguadores > 0 ? maxTiempoAmort3D + 200 : TIEMPO_INICIO_PROD;
+            
+            let maxTiempoProd = TIEMPO_PROD_3D;
             if (params.pozosEspeciales) {
                 for (let row = 0; row < totalRows; row++) {
-                    const tipo = getTipoPozo(row).tipo;
-                    if (tipo === 'produccion') {
-                        let filaProdRelativa = row - filasPrecorte - filasBorde - filasAmortiguadores;
+                    if (getTipoPozo(row).tipo === 'produccion') {
+                        const filaRel = Math.max(0, row - filasPrecorte - filasAmortiguadores);
                         for (let col = 0; col < totalCols; col++) {
-                            const t = TIEMPO_INICIO_PROD + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * B;
+                            const t = TIEMPO_PROD_3D + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_PROD * B;
                             maxTiempoProd = Math.max(maxTiempoProd, t);
                         }
                     }
@@ -3091,35 +3113,20 @@
                 for (let col = 0; col < totalCols; col++) {
                     const x = col * S, z = row * B;
                     
-                    // Calcular detTime según tipo de pozo (estándar MLP)
                     let detTime;
                     if (tipoPozo.tipo === 'precorte') {
-                        // Precorte: 100ms, secuencia por columna
                         detTime = TIEMPO_PRECORTE + col * 31;
-                    } else if (tipoPozo.tipo === 'produccion') {
-                        // Producción: inicia en 5000ms, secuencia diagonal
-                        let filaProdRelativa = row;
-                        if (params.pozosEspeciales) {
-                            filaProdRelativa = row - filasPrecorte - filasBorde - filasAmortiguadores;
-                        }
-                        detTime = TIEMPO_INICIO_PROD + col * MS_ENTRE_POZOS_PROD + filaProdRelativa * MS_BURDEN_PROD * B;
                     } else if (tipoPozo.tipo === 'amortiguadores') {
-                        // Amortiguadores: después de producción
-                        let filaAmortiguadoresRelativa = 0;
-                        if (params.pozosEspeciales) {
-                            filaAmortiguadoresRelativa = row - filasPrecorte - filasBorde;
-                        }
-                        detTime = maxTiempoProd + 100 + col * MS_ENTRE_POZOS_PROD + filaAmortiguadoresRelativa * MS_BURDEN_AMORTIGUADORES * B;
+                        const filaRel = Math.max(0, row - filasPrecorte);
+                        detTime = TIEMPO_AMORT_3D + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_AMORT * B;
+                    } else if (tipoPozo.tipo === 'produccion') {
+                        const filaRel = Math.max(0, row - filasPrecorte - filasAmortiguadores);
+                        detTime = TIEMPO_PROD_3D + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_PROD * B;
                     } else if (tipoPozo.tipo === 'borde') {
-                        // Borde: al final
-                        let filaBordeRelativa = 0;
-                        if (params.pozosEspeciales) {
-                            filaBordeRelativa = row - filasPrecorte;
-                        }
-                        const tiempoBaseAmortiguadores = maxTiempoProd + 100 + filasAmortiguadores * MS_BURDEN_AMORTIGUADORES * B;
-                        detTime = tiempoBaseAmortiguadores + 200 + col * MS_ENTRE_POZOS_PROD + filaBordeRelativa * MS_BURDEN_BORDE * B;
+                        const filaRel = Math.max(0, row - filasPrecorte - filasAmortiguadores - params.filasProd);
+                        detTime = maxTiempoProd + 200 + col * MS_ENTRE_POZOS + filaRel * MS_BURDEN_BORDE * B;
                     } else {
-                        detTime = col * 30 + row * 52; // Fallback
+                        detTime = col * 30 + row * 52;
                     }
 
                     const grp = new THREE.Group();
@@ -3142,148 +3149,129 @@
                                        tipoPozo.tipo === 'amortiguadores' ? 0xd97706 : 0xff1744;
 
                     if (params.dobleTaco && tipoPozo.tipo !== 'precorte') {
-                        // === MODELO DOBLE TACO 3D CON 3 APDs ===
-                        
-                        // Taco Superior (color según tipo)
+                        const SEG = 8;
                         const tacoSup = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.9, visualD * 0.9, T, 12),
+                            new THREE.CylinderGeometry(visualD * 0.9, visualD * 0.9, T, SEG),
                             new THREE.MeshPhongMaterial({ color: tacoColor })
                         );
                         tacoSup.position.y = -T / 2;
                         grp.add(tacoSup);
 
-                        // Carga Superior (color según tipo)
                         const cargaSup = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.8, visualD * 0.8, dobleTacoCalc.Lc1, 12),
+                            new THREE.CylinderGeometry(visualD * 0.8, visualD * 0.8, dobleTacoCalc.Lc1, SEG),
                             new THREE.MeshPhongMaterial({ color: cargaColor, emissive: 0x330000 })
                         );
                         cargaSup.position.y = -T - dobleTacoCalc.Lc1 / 2;
                         grp.add(cargaSup);
 
-                        // APD Superior (centro de carga superior)
                         apdY1 = dobleTacoCalc.apdY1;
                         apd1 = new THREE.Mesh(
-                            new THREE.SphereGeometry(0.35, 12, 12),
+                            new THREE.SphereGeometry(0.35, 6, 6),
                             new THREE.MeshPhongMaterial({ color: 0xffea00, emissive: 0xffc400, emissiveIntensity: 0.8 })
                         );
                         apd1.position.y = apdY1;
                         grp.add(apd1);
 
-                        // Taco Intermedio (púrpura - gravilla)
                         const tacoInt = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.9, visualD * 0.9, params.Ti, 12),
+                            new THREE.CylinderGeometry(visualD * 0.9, visualD * 0.9, params.Ti, SEG),
                             new THREE.MeshPhongMaterial({ color: 0x7c3aed })
                         );
                         tacoInt.position.y = -T - dobleTacoCalc.Lc1 - params.Ti / 2;
                         grp.add(tacoInt);
 
-                        // APD Intermedio (centro del taco intermedio)
                         apdY2 = dobleTacoCalc.apdY2;
                         apd2 = new THREE.Mesh(
-                            new THREE.SphereGeometry(0.35, 12, 12),
+                            new THREE.SphereGeometry(0.35, 6, 6),
                             new THREE.MeshPhongMaterial({ color: 0xffea00, emissive: 0xff6600, emissiveIntensity: 0.6 })
                         );
                         apd2.position.y = apdY2;
                         grp.add(apd2);
 
-                        // Carga Inferior (color según tipo)
                         const cargaInf = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.8, visualD * 0.8, dobleTacoCalc.Lc2, 12),
+                            new THREE.CylinderGeometry(visualD * 0.8, visualD * 0.8, dobleTacoCalc.Lc2, SEG),
                             new THREE.MeshPhongMaterial({ color: cargaColor, emissive: 0x330000 })
                         );
                         cargaInf.position.y = -T - dobleTacoCalc.Lc1 - params.Ti - dobleTacoCalc.Lc2 / 2;
                         grp.add(cargaInf);
 
-                        // APD Fondo (fondo de carga inferior)
                         apdY3 = dobleTacoCalc.apdY3;
                         apd3 = new THREE.Mesh(
-                            new THREE.SphereGeometry(0.35, 12, 12),
+                            new THREE.SphereGeometry(0.35, 6, 6),
                             new THREE.MeshPhongMaterial({ color: 0xffea00, emissive: 0xffc400, emissiveIntensity: 0.8 })
                         );
                         apd3.position.y = apdY3;
                         grp.add(apd3);
 
-                        // Pasadura (gris)
                         const pasadura = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.6, visualD * 0.6, J, 12),
+                            new THREE.CylinderGeometry(visualD * 0.6, visualD * 0.6, J, SEG),
                             new THREE.MeshPhongMaterial({ color: 0x6b7280, transparent: true, opacity: 0.6 })
                         );
                         pasadura.position.y = -T - dobleTacoCalc.Lc1 - params.Ti - dobleTacoCalc.Lc2 - J / 2;
                         grp.add(pasadura);
 
                     } else if (tipoPozo.tipo === 'precorte') {
-                        // === MODELO PRECORTE (Pozos más delgados, carga desacoplada) ===
-                        const d_precorte = params.precorteDiam * 0.0254; // Diámetro en metros
+                        const SEG = 8;
+                        const d_precorte = params.precorteDiam * 0.0254;
                         const visualD_precorte = Math.max(d_precorte * 2.5, 0.25);
                         const Lc = L - T - J;
                         apdY1 = -T - Lc;
 
-                        // Taco precorte (más delgado)
                         const taco = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD_precorte * 0.9, visualD_precorte * 0.9, T, 12),
+                            new THREE.CylinderGeometry(visualD_precorte * 0.9, visualD_precorte * 0.9, T, SEG),
                             new THREE.MeshPhongMaterial({ color: 0x8AD4EB })
                         );
                         taco.position.y = -T / 2;
                         grp.add(taco);
 
-                        // Carga precorte (desacoplada - más delgada que el pozo)
                         const carga = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD_precorte * 0.4, visualD_precorte * 0.4, Lc, 12),
+                            new THREE.CylinderGeometry(visualD_precorte * 0.4, visualD_precorte * 0.4, Lc, SEG),
                             new THREE.MeshPhongMaterial({ color: 0x0891b2, emissive: 0x042f2e })
                         );
                         carga.position.y = -T - Lc / 2;
                         grp.add(carga);
 
-                        // Cordón detonante (línea central)
                         const cordon = new THREE.Mesh(
-                            new THREE.CylinderGeometry(0.05, 0.05, Lc, 6),
+                            new THREE.CylinderGeometry(0.05, 0.05, Lc, 4),
                             new THREE.MeshPhongMaterial({ color: 0xffea00, emissive: 0xffc400 })
                         );
                         cordon.position.y = -T - Lc / 2;
                         grp.add(cordon);
 
-                        // APD precorte
                         apd1 = new THREE.Mesh(
-                            new THREE.SphereGeometry(0.25, 12, 12),
+                            new THREE.SphereGeometry(0.25, 6, 6),
                             new THREE.MeshPhongMaterial({ color: 0xffea00, emissive: 0xffc400, emissiveIntensity: 0.8 })
                         );
                         apd1.position.y = apdY1;
                         grp.add(apd1);
-
-                        // Sin pasadura en precorte típicamente
                         
                     } else {
-                        // === MODELO SIMPLE CON PASADURA (Producción/Amortiguadores/Borde) ===
+                        const SEG = 8;
                         const Lc = L - T - J;
-                        apdY1 = -T - Lc; // APD al fondo
+                        apdY1 = -T - Lc;
 
-                        // Taco (color según tipo)
                         const taco = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.9, visualD * 0.9, T, 12),
+                            new THREE.CylinderGeometry(visualD * 0.9, visualD * 0.9, T, SEG),
                             new THREE.MeshPhongMaterial({ color: tacoColor })
                         );
                         taco.position.y = -T / 2;
                         grp.add(taco);
 
-                        // Carga (color según tipo)
                         const carga = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.8, visualD * 0.8, Lc, 12),
+                            new THREE.CylinderGeometry(visualD * 0.8, visualD * 0.8, Lc, SEG),
                             new THREE.MeshPhongMaterial({ color: cargaColor, emissive: 0x330000 })
                         );
                         carga.position.y = -T - Lc / 2;
                         grp.add(carga);
 
-                        // APD
                         apd1 = new THREE.Mesh(
-                            new THREE.SphereGeometry(0.4, 12, 12),
+                            new THREE.SphereGeometry(0.4, 6, 6),
                             new THREE.MeshPhongMaterial({ color: 0xffea00, emissive: 0xffc400, emissiveIntensity: 0.8 })
                         );
                         apd1.position.y = apdY1;
                         grp.add(apd1);
 
-                        // Pasadura (gris)
                         const pasadura = new THREE.Mesh(
-                            new THREE.CylinderGeometry(visualD * 0.6, visualD * 0.6, J, 12),
+                            new THREE.CylinderGeometry(visualD * 0.6, visualD * 0.6, J, SEG),
                             new THREE.MeshPhongMaterial({ color: 0x6b7280, transparent: true, opacity: 0.6 })
                         );
                         pasadura.position.y = -T - Lc - J / 2;
@@ -3300,169 +3288,118 @@
                 }
             }
 
+            _preCreateZoneObjects();
             updateRockStatsDisplay();
+        }
+
+        const _sharedRockGeos = {};
+        const _sharedRockMats = {};
+
+        function _getSharedRockGeo(sizeKey) {
+            if (!_sharedRockGeos[sizeKey]) {
+                const geo = new THREE.DodecahedronGeometry(sizeKey, 0);
+                const pos = geo.attributes.position;
+                for (let j = 0; j < pos.count; j++) {
+                    pos.setX(j, pos.getX(j) * (0.7 + Math.random() * 0.6));
+                    pos.setY(j, pos.getY(j) * (0.7 + Math.random() * 0.6));
+                    pos.setZ(j, pos.getZ(j) * (0.7 + Math.random() * 0.6));
+                }
+                _sharedRockGeos[sizeKey] = geo;
+            }
+            return _sharedRockGeos[sizeKey];
+        }
+
+        function _getSharedRockMat(color) {
+            const key = color.toString(16);
+            if (!_sharedRockMats[key]) {
+                _sharedRockMats[key] = new THREE.MeshPhongMaterial({ color, flatShading: true });
+            }
+            return _sharedRockMats[key];
+        }
+
+        function _addRock(pozo, sizeInches, color, angle, dist, yPos) {
+            const sizeKey = Math.round(sizeInches * 10) / 100;
+            const geo = _getSharedRockGeo(sizeKey);
+            const mat = _getSharedRockMat(color);
+            const rock = new THREE.Mesh(geo, mat);
+            rock.position.set(pozo.x + Math.cos(angle) * dist, yPos, pozo.z + Math.sin(angle) * dist);
+            rock.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+            scene.add(rock);
+            rockObjects3D.push(rock);
+            return rock;
         }
 
         function generateRocksForPozo(pozo) {
             if (pozo.rocksGenerated) return;
             pozo.rocksGenerated = true;
 
-            const Xc = theoreticalValues.Xc; // Ya en pulgadas
+            const Xc = theoreticalValues.Xc;
             const n = params.dobleTaco ? dobleTacoCalc.n_eff : params.n;
             const P50 = theoreticalValues.X50;
             const P80 = theoreticalValues.P80;
 
             if (params.dobleTaco && pozo.apdY2 && pozo.apdY3) {
-                // ============================================================
-                // FRAGMENTOS MODELO DOBLE TACO
-                // Los fragmentos se distribuyen hacia la superficie (cara libre)
-                // ============================================================
-
-                // === CONO 1 (APD1 hacia superficie) ===
-                // Finos cerca del APD1 y hacia arriba
-                for (let i = 0; i < 8; i++) {
+                for (let i = 0; i < 4; i++) {
                     const u = Math.random() * 0.4;
-                    let size = Xc * Math.pow(-Math.log(1 - u * 0.4), 1 / (n * 1.5));
-                    size = Math.max(0.15, Math.min(size, P50 * 0.7));
-                    const rock = createRockMesh(size, 0x22c55e);
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = Math.random() * zones.rc * 0.9;
-                    // Distribuir hacia arriba (superficie) desde APD1
-                    const yPos = pozo.apdY1 + Math.random() * Math.abs(pozo.apdY1) * 0.6;
-                    rock.position.set(pozo.x + Math.cos(angle) * dist, yPos, pozo.z + Math.sin(angle) * dist);
-                    scene.add(rock);
-                    rockObjects3D.push(rock);
+                    let size = Math.max(0.15, Math.min(Xc * Math.pow(-Math.log(1 - u * 0.4), 1 / (n * 1.5)), P50 * 0.7));
+                    _addRock(pozo, size, 0x22c55e, Math.random() * Math.PI * 2, Math.random() * zones.rc * 0.9,
+                        pozo.apdY1 + Math.random() * Math.abs(pozo.apdY1) * 0.6);
                     rockStats.finos++;
                 }
-
-                // Medios en zona rf del cono 1 (hacia superficie)
-                for (let i = 0; i < 6; i++) {
-                    const u = 0.3 + Math.random() * 0.45;
-                    let size = Xc * Math.pow(-Math.log(1 - u), 1 / n);
-                    size = Math.max(P50 * 0.5, Math.min(size, P80));
-                    const rock = createRockMesh(size, 0xeab308);
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = zones.rc + Math.random() * (zones.rf - zones.rc);
-                    const yPos = pozo.apdY1 + Math.random() * Math.abs(pozo.apdY1) * 0.7;
-                    rock.position.set(pozo.x + Math.cos(angle) * dist, yPos, pozo.z + Math.sin(angle) * dist);
-                    scene.add(rock);
-                    rockObjects3D.push(rock);
-                    rockStats.medios++;
-                }
-
-                // === CONO 2 (APD2 hacia superficie + componente abajo) ===
-                // Finos del APD2 principalmente hacia arriba
-                for (let i = 0; i < 8; i++) {
-                    const u = Math.random() * 0.4;
-                    let size = Xc * Math.pow(-Math.log(1 - u * 0.4), 1 / (n * 1.5));
-                    size = Math.max(0.15, Math.min(size, P50 * 0.7));
-                    const rock = createRockMesh(size, 0x22c55e);
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = Math.random() * zones.rc * 0.85;
-                    // 80% hacia arriba, 20% hacia abajo (componente menor)
-                    const yDir = Math.random() < 0.8 ? 1 : -1;
-                    const yOffset = yDir > 0 ? Math.random() * (Math.abs(pozo.apdY2) - params.T) * 0.5 : Math.random() * dobleTacoCalc.Lc2 * 0.4;
-                    const yPos = pozo.apdY2 + yDir * yOffset;
-                    rock.position.set(pozo.x + Math.cos(angle) * dist, yPos, pozo.z + Math.sin(angle) * dist);
-                    scene.add(rock);
-                    rockObjects3D.push(rock);
-                    rockStats.finos++;
-                }
-
-                // Medios del cono 2
-                for (let i = 0; i < 6; i++) {
-                    const u = 0.3 + Math.random() * 0.45;
-                    let size = Xc * Math.pow(-Math.log(1 - u), 1 / n);
-                    size = Math.max(P50 * 0.5, Math.min(size, P80));
-                    const rock = createRockMesh(size, 0xeab308);
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = zones.rc + Math.random() * (zones.rf - zones.rc);
-                    const yDir = Math.random() < 0.75 ? 1 : -1;
-                    const yOffset = yDir > 0 ? Math.random() * Math.abs(pozo.apdY2) * 0.5 : Math.random() * dobleTacoCalc.Lc2 * 0.3;
-                    const yPos = pozo.apdY2 + yDir * yOffset;
-                    rock.position.set(pozo.x + Math.cos(angle) * dist, yPos, pozo.z + Math.sin(angle) * dist);
-                    scene.add(rock);
-                    rockObjects3D.push(rock);
-                    rockStats.medios++;
-                }
-
-                // === ZONA DE INTERACCIÓN (donde se superponen conos 1 y 2) ===
-                // Mayor fragmentación en esta zona
-                for (let i = 0; i < 6; i++) {
-                    const u = 0.15 + Math.random() * 0.35;
-                    let size = Xc * Math.pow(-Math.log(1 - u), 1 / (n * 1.4));
-                    size = Math.max(0.15, Math.min(size, P50 * 0.8));
-                    const rock = createRockMesh(size, 0x22c55e);
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = Math.random() * zones.rf * 0.6;
-                    // Entre APD1 y APD2
-                    const yPos = pozo.apdY2 + Math.random() * (Math.abs(pozo.apdY2) - Math.abs(pozo.apdY1));
-                    rock.position.set(pozo.x + Math.cos(angle) * dist, yPos, pozo.z + Math.sin(angle) * dist);
-                    scene.add(rock);
-                    rockObjects3D.push(rock);
-                    rockStats.finos++;
-                }
-
-                // === GRUESOS (reducidos por doble taco, en periferia) ===
                 for (let i = 0; i < 3; i++) {
+                    const u = 0.3 + Math.random() * 0.45;
+                    let size = Math.max(P50 * 0.5, Math.min(Xc * Math.pow(-Math.log(1 - u), 1 / n), P80));
+                    _addRock(pozo, size, 0xeab308, Math.random() * Math.PI * 2,
+                        zones.rc + Math.random() * (zones.rf - zones.rc),
+                        pozo.apdY1 + Math.random() * Math.abs(pozo.apdY1) * 0.7);
+                    rockStats.medios++;
+                }
+                for (let i = 0; i < 4; i++) {
+                    const u = Math.random() * 0.4;
+                    let size = Math.max(0.15, Math.min(Xc * Math.pow(-Math.log(1 - u * 0.4), 1 / (n * 1.5)), P50 * 0.7));
+                    const yDir = Math.random() < 0.8 ? 1 : -1;
+                    const yOff = yDir > 0 ? Math.random() * (Math.abs(pozo.apdY2) - params.T) * 0.5 : Math.random() * dobleTacoCalc.Lc2 * 0.4;
+                    _addRock(pozo, size, 0x22c55e, Math.random() * Math.PI * 2, Math.random() * zones.rc * 0.85,
+                        pozo.apdY2 + yDir * yOff);
+                    rockStats.finos++;
+                }
+                for (let i = 0; i < 3; i++) {
+                    const u = 0.15 + Math.random() * 0.35;
+                    let size = Math.max(0.15, Math.min(Xc * Math.pow(-Math.log(1 - u), 1 / (n * 1.4)), P50 * 0.8));
+                    _addRock(pozo, size, 0x22c55e, Math.random() * Math.PI * 2, Math.random() * zones.rf * 0.6,
+                        pozo.apdY2 + Math.random() * (Math.abs(pozo.apdY2) - Math.abs(pozo.apdY1)));
+                    rockStats.finos++;
+                }
+                for (let i = 0; i < 2; i++) {
                     const u = 0.7 + Math.random() * 0.25;
-                    let size = Xc * Math.pow(-Math.log(1 - u), 1 / n);
-                    size = Math.max(P80 * 0.6, Math.min(size, 3.5));
-                    const rock = createRockMesh(size, 0xD22630);
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = zones.rf + Math.random() * (zones.rd - zones.rf);
-                    const yPos = -params.H * 0.3 + Math.random() * params.H * 0.5;
-                    rock.position.set(pozo.x + Math.cos(angle) * dist, yPos, pozo.z + Math.sin(angle) * dist);
-                    scene.add(rock);
-                    rockObjects3D.push(rock);
+                    let size = Math.max(P80 * 0.6, Math.min(Xc * Math.pow(-Math.log(1 - u), 1 / n), 3.5));
+                    _addRock(pozo, size, 0xD22630, Math.random() * Math.PI * 2,
+                        zones.rf + Math.random() * (zones.rd - zones.rf),
+                        -params.H * 0.3 + Math.random() * params.H * 0.5);
                     rockStats.gruesos++;
                 }
-
             } else {
-                // ============================================================
-                // FRAGMENTOS MODELO SIMPLE (UN CONO hacia superficie)
-                // ============================================================
-                
-                // Finos cerca del APD, distribuidos hacia superficie
-                for (let i = 0; i < 10; i++) {
+                for (let i = 0; i < 5; i++) {
                     const u = Math.random() * 0.4;
-                    let size = Xc * Math.pow(-Math.log(1 - u * 0.4), 1 / (n * 1.5));
-                    size = Math.max(0.15, Math.min(size, P50 * 0.7));
-                    const rock = createRockMesh(size, 0x22c55e);
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = Math.random() * zones.rc * 0.85;
-                    // Hacia arriba desde APD
-                    rock.position.set(pozo.x + Math.cos(angle) * dist, pozo.apdY1 + Math.random() * Math.abs(pozo.apdY1) * 0.7, pozo.z + Math.sin(angle) * dist);
-                    scene.add(rock);
-                    rockObjects3D.push(rock);
+                    let size = Math.max(0.15, Math.min(Xc * Math.pow(-Math.log(1 - u * 0.4), 1 / (n * 1.5)), P50 * 0.7));
+                    _addRock(pozo, size, 0x22c55e, Math.random() * Math.PI * 2, Math.random() * zones.rc * 0.85,
+                        pozo.apdY1 + Math.random() * Math.abs(pozo.apdY1) * 0.7);
                     rockStats.finos++;
                 }
-
-                // Medios en zona rf (hacia superficie)
-                for (let i = 0; i < 10; i++) {
+                for (let i = 0; i < 5; i++) {
                     const u = 0.3 + Math.random() * 0.45;
-                    let size = Xc * Math.pow(-Math.log(1 - u), 1 / n);
-                    size = Math.max(P50 * 0.5, Math.min(size, P80));
-                    const rock = createRockMesh(size, 0xeab308);
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = zones.rc + Math.random() * (zones.rf - zones.rc);
-                    rock.position.set(pozo.x + Math.cos(angle) * dist, pozo.apdY1 + Math.random() * Math.abs(pozo.apdY1) * 0.6, pozo.z + Math.sin(angle) * dist);
-                    scene.add(rock);
-                    rockObjects3D.push(rock);
+                    let size = Math.max(P50 * 0.5, Math.min(Xc * Math.pow(-Math.log(1 - u), 1 / n), P80));
+                    _addRock(pozo, size, 0xeab308, Math.random() * Math.PI * 2,
+                        zones.rc + Math.random() * (zones.rf - zones.rc),
+                        pozo.apdY1 + Math.random() * Math.abs(pozo.apdY1) * 0.6);
                     rockStats.medios++;
                 }
-
-                // Gruesos en zona rd (periferia)
-                for (let i = 0; i < 6; i++) {
+                for (let i = 0; i < 3; i++) {
                     const u = 0.65 + Math.random() * 0.33;
-                    let size = Xc * Math.pow(-Math.log(1 - u), 1 / n);
-                    size = Math.max(P80 * 0.7, Math.min(size, 5));
-                    const rock = createRockMesh(size, 0xD22630);
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = zones.rf + Math.random() * (zones.rd - zones.rf);
-                    rock.position.set(pozo.x + Math.cos(angle) * dist, -params.H * 0.3 + Math.random() * params.H * 0.4, pozo.z + Math.sin(angle) * dist);
-                    scene.add(rock);
-                    rockObjects3D.push(rock);
+                    let size = Math.max(P80 * 0.7, Math.min(Xc * Math.pow(-Math.log(1 - u), 1 / n), 5));
+                    _addRock(pozo, size, 0xD22630, Math.random() * Math.PI * 2,
+                        zones.rf + Math.random() * (zones.rd - zones.rf),
+                        -params.H * 0.3 + Math.random() * params.H * 0.4);
                     rockStats.gruesos++;
                 }
             }
@@ -3921,6 +3858,7 @@
         function resetAnimation() {
             waveTime = 0;
             isAnimating = false;
+            _animFrameCount = 0;
             document.getElementById('btn-play').textContent = '▶';
             document.getElementById('btn-play').classList.remove('active');
             
@@ -3930,7 +3868,12 @@
             rockObjects3D = [];
             rockStats = { total: 0, finos: 0, medios: 0, gruesos: 0 };
             
-            pozos3D.forEach(p => { p.detonated = false; p.zoneAdded = false; p.rocksGenerated = false; });
+            pozos3D.forEach(p => {
+                p.detonated = false;
+                p.zoneAdded = false;
+                p.rocksGenerated = false;
+                if (p._zoneGroup) p._zoneGroup.visible = false;
+            });
             
             updateRockStatsDisplay();
             drawAllViews();
@@ -3942,11 +3885,15 @@
             drawPlantaView(waveTime);
         }
 
+        let _animFrameCount = 0;
+        const TARGET_ANIM_SECONDS = 10;
+
         function animate() {
             requestAnimationFrame(animate);
             
             if (isAnimating) {
-                waveTime += 2.5 * animationSpeed;
+                const dynamicStep = Math.max(5, (waveData.maxTime / (TARGET_ANIM_SECONDS * 60))) * animationSpeed;
+                waveTime += dynamicStep;
                 if (waveTime > waveData.maxTime) {
                     waveTime = waveData.maxTime;
                     isAnimating = false;
@@ -3954,14 +3901,156 @@
                     document.getElementById('btn-play').classList.remove('active');
                 }
                 update3DAnimation();
-                drawPlantaView(waveTime);
+                _animFrameCount++;
+                if (_animFrameCount % 3 === 0) {
+                    drawPlantaView(waveTime);
+                }
             }
             
             renderer.render(scene, camera);
         }
 
+        function _preCreateZoneObjects() {
+            const CSEG = 10;
+            const SSEG = 8;
+
+            pozos3D.forEach(pozo => {
+                pozo._zoneGroup = new THREE.Group();
+                pozo._zoneGroup.visible = false;
+                scene.add(pozo._zoneGroup);
+
+                if (params.dobleTaco && pozo.apdY2 && pozo.apdY3) {
+                    const cone3H = Math.abs(pozo.apdY3);
+                    const c3 = new THREE.Mesh(
+                        new THREE.ConeGeometry(zones.rd * 0.8, cone3H * 0.6, CSEG, 1, true),
+                        new THREE.MeshBasicMaterial({ color: 0xffcc00, transparent: true, opacity: 0.05, side: THREE.DoubleSide })
+                    );
+                    c3.rotation.x = Math.PI;
+                    c3.position.set(pozo.x, pozo.apdY3 + cone3H * 0.3, pozo.z);
+                    pozo._zoneGroup.add(c3);
+
+                    const s3 = new THREE.Mesh(
+                        new THREE.SphereGeometry(zones.rc * 0.8, SSEG, SSEG),
+                        new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.15 })
+                    );
+                    s3.position.set(pozo.x, pozo.apdY3, pozo.z);
+                    pozo._zoneGroup.add(s3);
+
+                    const c2HUp = Math.abs(pozo.apdY2);
+                    const c2 = new THREE.Mesh(
+                        new THREE.ConeGeometry(zones.rd, c2HUp * 0.7, CSEG, 1, true),
+                        new THREE.MeshBasicMaterial({ color: 0x7c3aed, transparent: true, opacity: 0.06, side: THREE.DoubleSide })
+                    );
+                    c2.rotation.x = Math.PI;
+                    c2.position.set(pozo.x, pozo.apdY2 + c2HUp * 0.35, pozo.z);
+                    pozo._zoneGroup.add(c2);
+
+                    const c2rf = new THREE.Mesh(
+                        new THREE.ConeGeometry(zones.rf * 0.85, c2HUp * 0.6, CSEG, 1, true),
+                        new THREE.MeshBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.07, side: THREE.DoubleSide })
+                    );
+                    c2rf.rotation.x = Math.PI;
+                    c2rf.position.set(pozo.x, pozo.apdY2 + c2HUp * 0.3, pozo.z);
+                    pozo._zoneGroup.add(c2rf);
+
+                    const c2Down = new THREE.Mesh(
+                        new THREE.ConeGeometry(zones.rf * 0.5, dobleTacoCalc.Lc2 * 0.5, SSEG, 1, true),
+                        new THREE.MeshBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.04, side: THREE.DoubleSide })
+                    );
+                    c2Down.position.set(pozo.x, pozo.apdY2 - dobleTacoCalc.Lc2 * 0.25, pozo.z);
+                    pozo._zoneGroup.add(c2Down);
+
+                    const s2 = new THREE.Mesh(
+                        new THREE.SphereGeometry(zones.rc * 0.9, SSEG, SSEG),
+                        new THREE.MeshBasicMaterial({ color: 0x7c3aed, transparent: true, opacity: 0.18 })
+                    );
+                    s2.position.set(pozo.x, pozo.apdY2, pozo.z);
+                    pozo._zoneGroup.add(s2);
+
+                    const c1H = Math.abs(pozo.apdY1);
+                    const c1 = new THREE.Mesh(
+                        new THREE.ConeGeometry(zones.rd * 1.2, c1H, CSEG, 1, true),
+                        new THREE.MeshBasicMaterial({ color: 0xffcc00, transparent: true, opacity: 0.07, side: THREE.DoubleSide })
+                    );
+                    c1.rotation.x = Math.PI;
+                    c1.position.set(pozo.x, pozo.apdY1 + c1H / 2, pozo.z);
+                    pozo._zoneGroup.add(c1);
+
+                    const c1rf = new THREE.Mesh(
+                        new THREE.ConeGeometry(zones.rf, c1H * 0.85, CSEG, 1, true),
+                        new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.08, side: THREE.DoubleSide })
+                    );
+                    c1rf.rotation.x = Math.PI;
+                    c1rf.position.set(pozo.x, pozo.apdY1 + c1H * 0.42, pozo.z);
+                    pozo._zoneGroup.add(c1rf);
+
+                    const c1Down = new THREE.Mesh(
+                        new THREE.ConeGeometry(zones.rf * 0.4, dobleTacoCalc.Lc1 * 0.4, SSEG, 1, true),
+                        new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.04, side: THREE.DoubleSide })
+                    );
+                    c1Down.position.set(pozo.x, pozo.apdY1 - dobleTacoCalc.Lc1 * 0.2, pozo.z);
+                    pozo._zoneGroup.add(c1Down);
+
+                    const s1 = new THREE.Mesh(
+                        new THREE.SphereGeometry(zones.rc, SSEG, SSEG),
+                        new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.15 })
+                    );
+                    s1.position.set(pozo.x, pozo.apdY1, pozo.z);
+                    pozo._zoneGroup.add(s1);
+
+                    const iz = new THREE.Mesh(
+                        new THREE.CylinderGeometry(zones.rf * 0.6, zones.rf * 0.5, params.Ti * 1.2, SSEG, 1, true),
+                        new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.08, side: THREE.DoubleSide })
+                    );
+                    iz.position.set(pozo.x, pozo.apdY2 + params.Ti / 2, pozo.z);
+                    pozo._zoneGroup.add(iz);
+
+                    [
+                        { y: pozo.apdY3, color: 0xffcc00, r: zones.rf * 0.5 },
+                        { y: pozo.apdY2, color: 0xa855f7, r: zones.rf * 0.6 },
+                        { y: pozo.apdY1, color: 0xffcc00, r: zones.rf * 0.7 }
+                    ].forEach(rd => {
+                        const ring = new THREE.Mesh(
+                            new THREE.TorusGeometry(rd.r, 0.05, 4, 12),
+                            new THREE.MeshBasicMaterial({ color: rd.color, transparent: true, opacity: 0.2 })
+                        );
+                        ring.rotation.x = Math.PI / 2;
+                        ring.position.set(pozo.x, rd.y, pozo.z);
+                        pozo._zoneGroup.add(ring);
+                    });
+
+                } else {
+                    const cH = Math.abs(pozo.apdY1);
+                    const c1 = new THREE.Mesh(
+                        new THREE.ConeGeometry(zones.rd * 1.3, cH, CSEG, 1, true),
+                        new THREE.MeshBasicMaterial({ color: 0xffcc00, transparent: true, opacity: 0.05, side: THREE.DoubleSide })
+                    );
+                    c1.rotation.x = Math.PI;
+                    c1.position.set(pozo.x, pozo.apdY1 + cH / 2, pozo.z);
+                    pozo._zoneGroup.add(c1);
+
+                    const c2 = new THREE.Mesh(
+                        new THREE.ConeGeometry(zones.rf * 1.15, cH * 0.85, CSEG, 1, true),
+                        new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.08, side: THREE.DoubleSide })
+                    );
+                    c2.rotation.x = Math.PI;
+                    c2.position.set(pozo.x, pozo.apdY1 + cH * 0.42, pozo.z);
+                    pozo._zoneGroup.add(c2);
+
+                    const sph = new THREE.Mesh(
+                        new THREE.SphereGeometry(zones.rc, SSEG, SSEG),
+                        new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.12 })
+                    );
+                    sph.position.set(pozo.x, pozo.apdY1, pozo.z);
+                    pozo._zoneGroup.add(sph);
+                }
+            });
+        }
+
         function update3DAnimation() {
             document.getElementById('time-display').textContent = `t = ${waveTime.toFixed(0)} ms`;
+
+            const rockDelay = Math.max(30, waveData.maxTime * 0.01);
 
             pozos3D.forEach(pozo => {
                 if (waveTime >= pozo.detTime) {
@@ -3979,189 +4068,10 @@
 
                     if (!pozo.zoneAdded) {
                         pozo.zoneAdded = true;
-
-                        if (params.dobleTaco && pozo.apdY2 && pozo.apdY3) {
-                            // ============================================================
-                            // MODELO DOBLE TACO - SECUENCIA: ABAJO → ARRIBA
-                            // ============================================================
-                            // Orden de detonación:
-                            // 1° APD3 (fondo) - detona PRIMERO
-                            // 2° APD2 (taco intermedio) - detona SEGUNDO  
-                            // 3° APD1 (superior) - detona ÚLTIMO
-                            //
-                            // Cada APD genera cono hacia superficie (cara libre principal)
-                            // + componente hacia abajo (cara libre secundaria creada por
-                            //   detonación previa)
-                            
-                            // === CONO 3: APD3 detona PRIMERO ===
-                            // Solo tiene cara libre arriba (superficie), cono hacia ARRIBA
-                            const cone3_height = Math.abs(pozo.apdY3); // Hasta superficie
-                            const cone3_rd = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rd * 0.8, cone3_height * 0.6, 20, 1, true),
-                                new THREE.MeshBasicMaterial({ color: 0xffcc00, transparent: true, opacity: 0.05, side: THREE.DoubleSide })
-                            );
-                            cone3_rd.rotation.x = Math.PI; // Punta abajo, base arriba
-                            cone3_rd.position.set(pozo.x, pozo.apdY3 + cone3_height * 0.3, pozo.z);
-                            scene.add(cone3_rd);
-                            zoneObjects3D.push(cone3_rd);
-
-                            // Esfera APD3
-                            const sphere3 = new THREE.Mesh(
-                                new THREE.SphereGeometry(zones.rc * 0.8, 16, 16),
-                                new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.15 })
-                            );
-                            sphere3.position.set(pozo.x, pozo.apdY3, pozo.z);
-                            scene.add(sphere3);
-                            zoneObjects3D.push(sphere3);
-
-                            // === CONO 2: APD2 detona SEGUNDO ===
-                            // Cara libre arriba (superficie) + cara libre abajo (APD3 ya fragmentó)
-                            // Cono principal hacia ARRIBA
-                            const cone2_height_up = Math.abs(pozo.apdY2);
-                            const cone2_rd = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rd * 1.0, cone2_height_up * 0.7, 20, 1, true),
-                                new THREE.MeshBasicMaterial({ color: 0x7c3aed, transparent: true, opacity: 0.06, side: THREE.DoubleSide })
-                            );
-                            cone2_rd.rotation.x = Math.PI; // Punta abajo, base arriba
-                            cone2_rd.position.set(pozo.x, pozo.apdY2 + cone2_height_up * 0.35, pozo.z);
-                            scene.add(cone2_rd);
-                            zoneObjects3D.push(cone2_rd);
-
-                            // Zona de fractura cono 2 hacia arriba
-                            const cone2_rf = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rf * 0.85, cone2_height_up * 0.6, 20, 1, true),
-                                new THREE.MeshBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.07, side: THREE.DoubleSide })
-                            );
-                            cone2_rf.rotation.x = Math.PI;
-                            cone2_rf.position.set(pozo.x, pozo.apdY2 + cone2_height_up * 0.3, pozo.z);
-                            scene.add(cone2_rf);
-                            zoneObjects3D.push(cone2_rf);
-
-                            // Cono 2 componente hacia ABAJO (cara libre creada por APD3)
-                            const cone2_height_down = dobleTacoCalc.Lc2 * 0.5;
-                            const cone2_down = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rf * 0.5, cone2_height_down, 16, 1, true),
-                                new THREE.MeshBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.04, side: THREE.DoubleSide })
-                            );
-                            cone2_down.rotation.x = 0; // Punta arriba, base abajo
-                            cone2_down.position.set(pozo.x, pozo.apdY2 - cone2_height_down / 2, pozo.z);
-                            scene.add(cone2_down);
-                            zoneObjects3D.push(cone2_down);
-
-                            // Esfera APD2
-                            const sphere2 = new THREE.Mesh(
-                                new THREE.SphereGeometry(zones.rc * 0.9, 16, 16),
-                                new THREE.MeshBasicMaterial({ color: 0x7c3aed, transparent: true, opacity: 0.18 })
-                            );
-                            sphere2.position.set(pozo.x, pozo.apdY2, pozo.z);
-                            scene.add(sphere2);
-                            zoneObjects3D.push(sphere2);
-
-                            // === CONO 1: APD1 detona ÚLTIMO ===
-                            // Cara libre arriba (superficie) + cara libre abajo (APD2 y APD3 ya fragmentaron)
-                            // Cono principal hacia ARRIBA
-                            const cone1_height = Math.abs(pozo.apdY1);
-                            const cone1_rd = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rd * 1.2, cone1_height, 20, 1, true),
-                                new THREE.MeshBasicMaterial({ color: 0xffcc00, transparent: true, opacity: 0.07, side: THREE.DoubleSide })
-                            );
-                            cone1_rd.rotation.x = Math.PI; // Punta abajo, base arriba
-                            cone1_rd.position.set(pozo.x, pozo.apdY1 + cone1_height / 2, pozo.z);
-                            scene.add(cone1_rd);
-                            zoneObjects3D.push(cone1_rd);
-
-                            // Zona de fractura cono 1
-                            const cone1_rf = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rf * 1.0, cone1_height * 0.85, 20, 1, true),
-                                new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.08, side: THREE.DoubleSide })
-                            );
-                            cone1_rf.rotation.x = Math.PI;
-                            cone1_rf.position.set(pozo.x, pozo.apdY1 + cone1_height * 0.42, pozo.z);
-                            scene.add(cone1_rf);
-                            zoneObjects3D.push(cone1_rf);
-
-                            // Cono 1 componente hacia ABAJO (cara libre creada por APD2)
-                            const cone1_height_down = dobleTacoCalc.Lc1 * 0.4;
-                            const cone1_down = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rf * 0.4, cone1_height_down, 16, 1, true),
-                                new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.04, side: THREE.DoubleSide })
-                            );
-                            cone1_down.rotation.x = 0; // Punta arriba, base abajo
-                            cone1_down.position.set(pozo.x, pozo.apdY1 - cone1_height_down / 2, pozo.z);
-                            scene.add(cone1_down);
-                            zoneObjects3D.push(cone1_down);
-
-                            // Esfera APD1
-                            const sphere1 = new THREE.Mesh(
-                                new THREE.SphereGeometry(zones.rc, 16, 16),
-                                new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.15 })
-                            );
-                            sphere1.position.set(pozo.x, pozo.apdY1, pozo.z);
-                            scene.add(sphere1);
-                            zoneObjects3D.push(sphere1);
-
-                            // === ZONA DE INTERACCIÓN (superposición de conos) ===
-                            const interactionZone = new THREE.Mesh(
-                                new THREE.CylinderGeometry(zones.rf * 0.6, zones.rf * 0.5, params.Ti * 1.2, 16, 1, true),
-                                new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.08, side: THREE.DoubleSide })
-                            );
-                            interactionZone.position.set(pozo.x, pozo.apdY2 + params.Ti / 2, pozo.z);
-                            scene.add(interactionZone);
-                            zoneObjects3D.push(interactionZone);
-
-                            // Anillos en cada APD (con número de secuencia)
-                            const ringData = [
-                                { y: pozo.apdY3, color: 0xffcc00, r: zones.rf * 0.5 },  // 1° 
-                                { y: pozo.apdY2, color: 0xa855f7, r: zones.rf * 0.6 },  // 2°
-                                { y: pozo.apdY1, color: 0xffcc00, r: zones.rf * 0.7 }   // 3°
-                            ];
-                            ringData.forEach(rd => {
-                                const ringGeo = new THREE.TorusGeometry(rd.r, 0.05, 8, 24);
-                                const ringMesh = new THREE.Mesh(
-                                    ringGeo,
-                                    new THREE.MeshBasicMaterial({ color: rd.color, transparent: true, opacity: 0.2 })
-                                );
-                                ringMesh.rotation.x = Math.PI / 2;
-                                ringMesh.position.set(pozo.x, rd.y, pozo.z);
-                                scene.add(ringMesh);
-                                zoneObjects3D.push(ringMesh);
-                            });
-
-                        } else {
-                            // ============================================================
-                            // MODELO SIMPLE: UN CONO QUE SE ABRE HACIA ARRIBA
-                            // ============================================================
-                            const coneHeight = Math.abs(pozo.apdY1);
-
-                            const cone1 = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rd * 1.3, coneHeight, 20, 1, true),
-                                new THREE.MeshBasicMaterial({ color: 0xffcc00, transparent: true, opacity: 0.05, side: THREE.DoubleSide })
-                            );
-                            cone1.rotation.x = Math.PI;
-                            cone1.position.set(pozo.x, pozo.apdY1 + coneHeight / 2, pozo.z);
-                            scene.add(cone1);
-                            zoneObjects3D.push(cone1);
-
-                            const cone2 = new THREE.Mesh(
-                                new THREE.ConeGeometry(zones.rf * 1.15, coneHeight * 0.85, 20, 1, true),
-                                new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.08, side: THREE.DoubleSide })
-                            );
-                            cone2.rotation.x = Math.PI;
-                            cone2.position.set(pozo.x, pozo.apdY1 + coneHeight * 0.42, pozo.z);
-                            scene.add(cone2);
-                            zoneObjects3D.push(cone2);
-
-                            const sphere = new THREE.Mesh(
-                                new THREE.SphereGeometry(zones.rc, 16, 16),
-                                new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.12 })
-                            );
-                            sphere.position.set(pozo.x, pozo.apdY1, pozo.z);
-                            scene.add(sphere);
-                            zoneObjects3D.push(sphere);
-                        }
+                        if (pozo._zoneGroup) pozo._zoneGroup.visible = true;
                     }
 
-                    if (!pozo.rocksGenerated && (waveTime - pozo.detTime) > 70) {
+                    if (!pozo.rocksGenerated && (waveTime - pozo.detTime) > rockDelay) {
                         generateRocksForPozo(pozo);
                     }
                 }
