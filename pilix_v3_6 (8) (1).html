@@ -1262,12 +1262,18 @@
                     </div>
                     
                     <!-- Granulometría -->
-                    <div class="viz-panel">
+                    <div class="viz-panel" id="viz-panel-granulo">
                         <div class="viz-header">
                             <div class="title">Curva Granulométrica</div>
                             <div class="subtitle">Rosin-Rammler (pulgadas)</div>
                         </div>
-                        <div class="canvas-container">
+                        <div class="granulo-controls" style="position:absolute; top:2px; right:2px; display:flex; gap:2px; z-index:10;">
+                            <button onclick="zoomGranulo('in')" title="Zoom In" style="background:rgba(0,0,0,0.8); color:#64CCC9; border:1px solid #2d4a52; border-radius:2px; padding:1px 5px; font-size:12px; cursor:pointer; font-weight:bold;">+</button>
+                            <button onclick="zoomGranulo('out')" title="Zoom Out" style="background:rgba(0,0,0,0.8); color:#64CCC9; border:1px solid #2d4a52; border-radius:2px; padding:1px 5px; font-size:12px; cursor:pointer; font-weight:bold;">−</button>
+                            <button onclick="zoomGranulo('reset')" title="Reset Zoom" style="background:rgba(0,0,0,0.8); color:#EAAA00; border:1px solid #2d4a52; border-radius:2px; padding:1px 5px; font-size:9px; cursor:pointer;">Reset</button>
+                            <button onclick="downloadGranuloImage()" title="Descargar Imagen" style="background:rgba(0,0,0,0.8); color:#4AC5BB; border:1px solid #2d4a52; border-radius:2px; padding:1px 5px; font-size:10px; cursor:pointer;">📷</button>
+                        </div>
+                        <div class="canvas-container" style="position:relative;">
                             <canvas id="canvas-granulo"></canvas>
                         </div>
                     </div>
@@ -1436,9 +1442,13 @@
                 </div>
 
                 <div class="theory-box">
-                    <h4>📥 Exportar</h4>
+                    <h4>📥 Exportar / Importar</h4>
                     <button class="btn btn-info" onclick="exportResults()" style="width:100%;margin-bottom:3px;">📥 Exportar CSV</button>
-                    <button class="btn btn-info" onclick="exportAllScenarios()" style="width:100%;">📥 Exportar JSON</button>
+                    <button class="btn btn-info" onclick="exportAllScenarios()" style="width:100%;margin-bottom:3px;">📥 Exportar JSON</button>
+                    <input type="file" id="file-import-scenarios" accept=".json" style="display:none;" onchange="importScenarios(event)">
+                    <button class="btn btn-warning" onclick="document.getElementById('file-import-scenarios').click()" style="width:100%; font-size:var(--font-sm); background:#EAAA00; color:#000;">
+                        📂 Importar Escenarios (JSON)
+                    </button>
                 </div>
             </div>
 
@@ -1902,6 +1912,10 @@
         let canvasPlanta, ctxPlanta;
         let canvasGranulo, ctxGranulo;
 
+        // Zoom state for granulometric chart
+        let granuloZoom = { xMin: 0, xMax: 14, yMin: 0, yMax: 100 };
+        const GRANULO_ZOOM_DEFAULT = { xMin: 0, xMax: 14, yMin: 0, yMax: 100 };
+
         // =====================================================================
         // FUNCIONES DE CONVERSIÓN (internas)
         // =====================================================================
@@ -1916,6 +1930,7 @@
             initThreeJS();
             initCanvases();
             setupListeners();
+            initGranuloZoomEvents();
             updateCalculations();
             createScene3D();
             animate();
@@ -3598,21 +3613,44 @@
             ctx.fillRect(0, 0, W, H);
 
             const m = { t: 12, r: 8, b: 20, l: 25 };
-            const xMax = 14; // pulgadas
+            const xMin = granuloZoom.xMin;
+            const xMax = granuloZoom.xMax;
+            const yMin = granuloZoom.yMin;
+            const yMax = granuloZoom.yMax;
+            const xRange = xMax - xMin;
+            const yRange = yMax - yMin;
 
-            const toX = v => m.l + (v / xMax) * (W - m.l - m.r);
-            const toY = p => H - m.b - (p / 100) * (H - m.t - m.b);
+            const toX = v => m.l + ((v - xMin) / xRange) * (W - m.l - m.r);
+            const toY = p => H - m.b - ((p - yMin) / yRange) * (H - m.t - m.b);
+
+            // Clip drawing area
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(m.l, m.t, W - m.l - m.r, H - m.t - m.b);
+            ctx.clip();
 
             // Grid
             ctx.strokeStyle = '#2d3748';
             ctx.lineWidth = 0.5;
-            for (let i = 0; i <= 10; i++) {
-                const y = toY(i * 10);
+            const yStep = yRange <= 30 ? 5 : (yRange <= 60 ? 10 : 20);
+            for (let i = Math.ceil(yMin / yStep) * yStep; i <= yMax; i += yStep) {
+                const y = toY(i);
                 ctx.beginPath();
                 ctx.moveTo(m.l, y);
                 ctx.lineTo(W - m.r, y);
                 ctx.stroke();
             }
+
+            const xStep = xRange <= 4 ? 0.5 : (xRange <= 8 ? 1 : 2);
+            for (let i = Math.ceil(xMin / xStep) * xStep; i <= xMax; i += xStep) {
+                const x = toX(i);
+                ctx.beginPath();
+                ctx.moveTo(x, m.t);
+                ctx.lineTo(x, H - m.b);
+                ctx.stroke();
+            }
+
+            ctx.restore();
 
             // Ejes
             ctx.strokeStyle = '#475569';
@@ -3627,11 +3665,11 @@
             ctx.fillStyle = '#9aa0a6';
             ctx.font = '5px JetBrains Mono';
             ctx.textAlign = 'center';
-            for (let i = 0; i <= xMax; i += 2) {
-                ctx.fillText(i + '"', toX(i), H - 10);
+            for (let i = Math.ceil(xMin / xStep) * xStep; i <= xMax; i += xStep) {
+                ctx.fillText((Math.round(i * 10) / 10) + '"', toX(i), H - 10);
             }
             ctx.textAlign = 'right';
-            for (let i = 0; i <= 100; i += 20) {
+            for (let i = Math.ceil(yMin / yStep) * yStep; i <= yMax; i += yStep) {
                 ctx.fillText(i + '%', m.l - 2, toY(i) + 2);
             }
 
@@ -3640,6 +3678,20 @@
             ctx.font = '5px JetBrains Mono';
             ctx.textAlign = 'center';
             ctx.fillText('Tamaño (pulgadas)', W / 2, H - 2);
+
+            // Zoom indicator
+            if (xMin !== GRANULO_ZOOM_DEFAULT.xMin || xMax !== GRANULO_ZOOM_DEFAULT.xMax) {
+                ctx.fillStyle = '#EAAA00';
+                ctx.font = 'bold 5px JetBrains Mono';
+                ctx.textAlign = 'right';
+                ctx.fillText(`Zoom: ${xMin.toFixed(1)}-${xMax.toFixed(1)}"`, W - m.r, m.t + 5);
+            }
+
+            // Clip for chart content
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(m.l, m.t, W - m.l - m.r, H - m.t - m.b);
+            ctx.clip();
 
             // ============================================================
             // MARCADORES DE PERCENTILES EN LA CURVA
@@ -3679,7 +3731,7 @@
                     ctx.setLineDash([3, 2]);
                     ctx.beginPath();
                     sc.curve.forEach((p, i) => {
-                        const sz_in = (i / sc.curve.length) * xMax;
+                        const sz_in = (i / sc.curve.length) * GRANULO_ZOOM_DEFAULT.xMax;
                         i === 0 ? ctx.moveTo(toX(sz_in), toY(p)) : ctx.lineTo(toX(sz_in), toY(p));
                     });
                     ctx.stroke();
@@ -3692,9 +3744,9 @@
             ctx.lineWidth = 1.5;
             ctx.setLineDash([]);
             ctx.beginPath();
-            for (let i = 0; i <= 120; i++) {
-                const sz_in = (i / 120) * xMax;
-                if (sz_in > xMax) break;
+            const fullXMax = GRANULO_ZOOM_DEFAULT.xMax;
+            for (let i = 0; i <= 200; i++) {
+                const sz_in = (i / 200) * fullXMax;
                 const P = 100 * (1 - Math.exp(-Math.pow(sz_in / Xc, n_draw)));
                 i === 0 ? ctx.moveTo(toX(sz_in), toY(P)) : ctx.lineTo(toX(sz_in), toY(P));
             }
@@ -3704,7 +3756,7 @@
             // DIBUJAR MARCADORES DE PERCENTILES
             // ============================================================
             percentiles.forEach(perc => {
-                if (perc.value > 0 && perc.value < xMax) {
+                if (perc.value > 0 && perc.value >= xMin && perc.value <= xMax) {
                     const x = toX(perc.value);
                     const y = toY(perc.pct);
                     
@@ -3743,10 +3795,10 @@
             // Curva MC actual
             if (mcResults.allCurves && mcResults.allCurves.length > 0) {
                 const points = [];
-                for (let i = 0; i <= 60; i++) {
-                    const sz_in = (i / 60) * xMax;
+                for (let i = 0; i <= 100; i++) {
+                    const sz_in = (i / 100) * fullXMax;
                     const pValues = mcResults.allCurves.map(curve => {
-                        const idx = Math.floor((sz_in / xMax) * curve.length);
+                        const idx = Math.floor((sz_in / fullXMax) * curve.length);
                         return curve[Math.min(idx, curve.length - 1)] || 0;
                     });
                     pValues.sort((a, b) => a - b);
@@ -3900,6 +3952,154 @@
                     ctx.fillText(`Error medio: ${errorMedio.toFixed(1)}%`, m.l + 18, H - m.b - 14);
                 }
             }
+
+            // Restore from clip
+            ctx.restore();
+        }
+
+        // =====================================================================
+        // ZOOM CURVA GRANULOMÉTRICA
+        // =====================================================================
+        function zoomGranulo(action) {
+            const xRange = granuloZoom.xMax - granuloZoom.xMin;
+            const center = (granuloZoom.xMin + granuloZoom.xMax) / 2;
+
+            if (action === 'in') {
+                const newRange = Math.max(2, xRange * 0.6);
+                granuloZoom.xMin = Math.max(0, center - newRange / 2);
+                granuloZoom.xMax = granuloZoom.xMin + newRange;
+            } else if (action === 'out') {
+                const newRange = Math.min(20, xRange / 0.6);
+                granuloZoom.xMin = Math.max(0, center - newRange / 2);
+                granuloZoom.xMax = granuloZoom.xMin + newRange;
+            } else if (action === 'reset') {
+                granuloZoom.xMin = GRANULO_ZOOM_DEFAULT.xMin;
+                granuloZoom.xMax = GRANULO_ZOOM_DEFAULT.xMax;
+                granuloZoom.yMin = GRANULO_ZOOM_DEFAULT.yMin;
+                granuloZoom.yMax = GRANULO_ZOOM_DEFAULT.yMax;
+            }
+            drawGranuloChart();
+        }
+
+        // Mouse wheel zoom on granulometric chart
+        function initGranuloZoomEvents() {
+            const canvas = document.getElementById('canvas-granulo');
+            if (!canvas) return;
+
+            canvas.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.offsetX / rect.width;
+                const xRange = granuloZoom.xMax - granuloZoom.xMin;
+                const xPos = granuloZoom.xMin + mouseX * xRange;
+
+                const factor = e.deltaY > 0 ? 1.15 : 0.85;
+                const newRange = Math.max(2, Math.min(20, xRange * factor));
+
+                granuloZoom.xMin = Math.max(0, xPos - mouseX * newRange);
+                granuloZoom.xMax = granuloZoom.xMin + newRange;
+
+                drawGranuloChart();
+            }, { passive: false });
+        }
+
+        // =====================================================================
+        // DESCARGAR IMAGEN DEL GRÁFICO
+        // =====================================================================
+        function downloadGranuloImage() {
+            if (!canvasGranulo) return;
+
+            // Create a high-res copy for download
+            const scale = 3;
+            const exportCanvas = document.createElement('canvas');
+            exportCanvas.width = canvasGranulo.width * scale;
+            exportCanvas.height = canvasGranulo.height * scale;
+            const exportCtx = exportCanvas.getContext('2d');
+            exportCtx.scale(scale, scale);
+
+            // Temporarily swap context to draw on export canvas
+            const origCtx = ctxGranulo;
+            const origW = canvasGranulo.width;
+            const origH = canvasGranulo.height;
+            ctxGranulo = exportCtx;
+
+            // Use a temporary canvas object that has the right dimensions
+            const origCanvas = canvasGranulo;
+            canvasGranulo = { width: origW, height: origH };
+
+            drawGranuloChart();
+
+            // Restore original
+            ctxGranulo = origCtx;
+            canvasGranulo = origCanvas;
+            drawGranuloChart();
+
+            // Download
+            exportCanvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'curva_granulometrica_pilix.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 'image/png');
+        }
+
+        // =====================================================================
+        // IMPORTAR ESCENARIOS
+        // =====================================================================
+        function importScenarios(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    if (!data.scenarios || !Array.isArray(data.scenarios)) {
+                        throw new Error('Formato inválido: no se encontraron escenarios');
+                    }
+
+                    let imported = 0;
+                    data.scenarios.forEach(sc => {
+                        // Rebuild curve from theoretical values if available
+                        let curve = sc.curve || [];
+                        if (curve.length === 0 && sc.theoretical && sc.theoretical.Xc > 0) {
+                            const Xc = sc.theoretical.Xc;
+                            const n_val = sc.theoretical.n || (sc.params && sc.params.n) || 1.2;
+                            for (let i = 0; i <= 120; i++) {
+                                const sz = (i / 120) * 14;
+                                curve.push(100 * (1 - Math.exp(-Math.pow(sz / Xc, n_val))));
+                            }
+                        }
+
+                        scenarios.push({
+                            name: sc.name || `Importado ${imported + 1}`,
+                            color: SCENARIO_COLORS[scenarios.length % SCENARIO_COLORS.length],
+                            p80: sc.p80_pulg || sc.p80 || 0,
+                            p100: sc.p100_pulg || sc.p100 || 0,
+                            curve: curve,
+                            params: sc.params || {},
+                            dobleTacoCalc: sc.dobleTacoCalc || {},
+                            zones: sc.zones || {},
+                            theoretical: sc.theoretical || {}
+                        });
+                        imported++;
+                    });
+
+                    renderScenarioList();
+                    drawGranuloChart();
+                    alert(`✅ ${imported} escenario(s) importado(s) correctamente`);
+                } catch (err) {
+                    alert('❌ Error al importar escenarios:\n' + err.message);
+                    console.error(err);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
         }
 
         // =====================================================================
@@ -4845,7 +5045,7 @@
             };
             
             if (isExcel) {
-                reader.readAsArrayAmortiguadores(file);
+                reader.readAsArrayBuffer(file);
             } else {
                 reader.readAsText(file);
             }
